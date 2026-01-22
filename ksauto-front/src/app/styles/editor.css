@@ -1,0 +1,12 @@
+.editor-grey-text,
+.editor-grey-text a,
+.editor-grey-text span,
+.editor-grey-text p {
+    color: #AAA6A1 !important;
+}
+.editor-red-text,
+.editor-red-text a,
+.editor-red-text span,
+.editor-red-text p{
+    color: #E23737 !important;
+}
