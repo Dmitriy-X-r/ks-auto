@@ -32,6 +32,26 @@ catalog.catalog-new #catalog__list {
   min-width: 0;
 }
 
+#catalog__list > .catalog__review_main.catalog__items__adverting-element {
+  height: 100%;
+  min-height: 100%;
+  align-self: stretch;   /* ключевое */
+  display: flex;         /* чтобы центрировать контент */
+  flex-direction: column;
+  justify-content: center; /* ✅ весь контент по центру */
+  text-align: center;      /* по желанию, обычно так выглядит лучше */
+}
+
+/* 3) Чтобы “Разместить” не улетал вниз, если где-то было space-between */
+#catalog__list > .catalog__review_main.catalog__items__adverting-element .catalog__review_main-btn {
+  margin-top: 12px; /* аккуратный отступ */
+}
+
+/* 4) Если в старых стилях у .catalog__review_main был фиксированный height/ padding — добиваем */
+#catalog__list > .catalog__review_main.catalog__items__adverting-element {
+  box-sizing: border-box;
+}
+
 .load_more{
     grid-column: 1 / 5;
 }

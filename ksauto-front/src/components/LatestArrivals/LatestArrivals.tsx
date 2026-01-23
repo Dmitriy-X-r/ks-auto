@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import AdvertisingElement from '@/components/advertising-element/Advertising-element'
 import './LatestArrivals.css';
 
 type CatalogItem = {
@@ -120,6 +121,7 @@ export default function LatestArrivals() {
 
             <section className="section_main catalog catalog-new new-container">
                 <div className="catalog__list" id="catalog__list">
+                    <AdvertisingElement className="catalog__items__adverting-element" />
                     {items.map((item, idx) => (
                         <div key={item.id} className="catalog__items news-item">
                             {/* fav */}

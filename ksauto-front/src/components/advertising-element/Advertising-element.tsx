@@ -1,15 +1,15 @@
 import Link from 'next/link'
 
-export default function AdvertisingElement() {
+export default function AdvertisingElement({ className }: { className?: string }) {
     return (
-        <Link href="/advertisement/" className="catalog__review_main">
-      <span className="catalog__review_main-title">
-        Место для вашей рекламы
-      </span>
+        <Link href="/advertisement/" className={`catalog__review_main ${className ?? ""}`}>
+            <span className="catalog__review_main-title">
+                Место для вашей рекламы
+            </span>
 
             <span className="catalog__review_main-desc">
-        Выберите место для вашей рекламы
-      </span>
+                Выберите место для вашей рекламы
+            </span>
 
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path
