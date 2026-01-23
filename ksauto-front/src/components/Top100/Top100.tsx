@@ -273,7 +273,6 @@ function CatalogCardView({ item, maxSlidesCount }: { item: CatalogCard; maxSlide
 
                         <div className="catalog__items-price-wrapper">
                             <p className="catalog__items-price">{formatPrice(item.price)}</p>
-                            {item.discountPrice ? <p className="catalog__items-price_old active">{formatPrice(item.discountPrice)}</p> : null}
                         </div>
                     </a>
 
