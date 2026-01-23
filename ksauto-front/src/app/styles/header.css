@@ -2979,6 +2979,7 @@ footer .copi * {
 
     .review_main__list {
         justify-content: center;
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .rating-result {

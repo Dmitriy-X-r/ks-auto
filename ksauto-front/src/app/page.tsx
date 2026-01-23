@@ -1,6 +1,7 @@
 import MainBanner from "@/components/MainBanner/MainBanner";
 import MainInfo from "@/components/MainInfo/MainInfo";
 import Top100 from "@/components/Top100/Top100";
+import NewsSection from "@/components/news/news-section/NewsSection";
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
       />
       <MainInfo />
       <Top100 />
+      <NewsSection />
     </>
   );
 }

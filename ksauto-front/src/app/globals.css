@@ -1130,7 +1130,6 @@ p.sale_list__check:nth-child(2){
     width: 464px;
     height: 15.6vw;
     max-height: 261px;
-    background-color: #E23737;
     border-radius: 8px;
     padding: 20px;
     margin-right: 16px;
@@ -4861,4 +4860,32 @@ body:has(.testSiteLabel){
     margin: 0 auto;
     padding: 0 20px;
     position: relative;
+}
+.news-item-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 10px;
+}
+.news-item-info-date {
+    color: #ffffff;
+    opacity: .6;
+    font-size: 13px;
+    font-family: 'Inter-Regular';
+}
+.news-item-info-count {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    align-items: center;
+    border-radius: 16px;
+    padding: 4px 10px;
+    backdrop-filter: blur(32px);
+    background: #FFFFFF29;
+}
+.news-item-info-count span {
+    color: #ffffff;
+    font-size: 11px;
+    font-family: 'Inter-Regular';
 }
