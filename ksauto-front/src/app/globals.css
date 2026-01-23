@@ -4862,3 +4862,7 @@ body:has(.testSiteLabel){
     padding: 0 20px;
     position: relative;
 }
+
+.fixSizeContainer{
+    background-color: #F8F8F7;
+}

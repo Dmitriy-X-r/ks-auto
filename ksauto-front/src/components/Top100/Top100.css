@@ -50,7 +50,7 @@
 
 /* убираем margin у "слайда" — gap делает Swiper spaceBetween */
 .catalog-premium .catalog-slide {
-  margin: 0 !important;
+  margin-right: 18px !important;
 }
 
 /* чтобы карточка занимала всю ширину слайда */
@@ -76,10 +76,6 @@
 }
 
 /* На всякий: иногда темы/стили задают overflow visible */
-#catalog-slider .swiper,
-#catalog-slider .swiper-wrapper {
-  overflow: visible; /* wrapper можно оставить visible */
-}
 
 /* Но ключевое — контейнер слайдера должен скрывать */
 #catalog-slider.catalog-slider {
@@ -97,3 +93,26 @@
   margin-right: 0 !important;
 }
 
+
+#catalog-slider {
+  width: 100%;
+  margin: 0 !important;
+  overflow: hidden; /* ✅ чтобы не было видно 5-й карточки */
+  box-sizing: border-box;
+}
+
+/* Внутренности — без "visible", пусть будет как у Swiper по умолчанию */
+#catalog-slider .swiper-wrapper {
+  box-sizing: border-box;
+}
+
+/* Слайды */
+#catalog-slider .swiper-slide {
+  height: auto;
+  display: flex;
+  box-sizing: border-box;
+}
+
+#catalog-slider .swiper-slide > * {
+  width: 100%;
+}

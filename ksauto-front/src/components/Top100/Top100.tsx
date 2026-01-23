@@ -193,9 +193,8 @@ export default function Top100() {
                 spaceBetween={16}
                 watchOverflow
 
-                // ✅ важное для “не показывать кусок следующего”
                 centeredSlides={false}
-                centeredSlidesBounds={true}
+                // centeredSlidesBounds={true}   // ❌ убрать
                 slidesOffsetBefore={0}
                 slidesOffsetAfter={0}
 
