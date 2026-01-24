@@ -78,7 +78,7 @@ export default function LatestArrivals() {
     const showTitle = true;
 
     // ===== МОКИ (первый экран) =====
-    const initial = useMemo(() => genMoreMock(1, 8), []);
+    const initial = useMemo(() => genMoreMock(1, 7), []);
     const [items, setItems] = useState<CatalogItem[]>(initial);
 
     // мок “пагинации”
@@ -167,7 +167,6 @@ export default function LatestArrivals() {
 
                                         <div className="catalog__items-price-wrapper">
                                             <p className="catalog__items-price">{formatPrice(item.price)}</p>
-                                            {item.discountPrice ? <p className="catalog__items-price_old active">{formatPrice(item.discountPrice)}</p> : null}
                                         </div>
                                     </a>
 

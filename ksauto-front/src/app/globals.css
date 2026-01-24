@@ -920,7 +920,7 @@ font.notetext {
     height: 100%;
     position: relative;
     margin-bottom: 34px;
-    margin-right: 18px;
+    /* margin-right: 18px; */
 }
 .section-catalog__items-images {
     width: 100%;
