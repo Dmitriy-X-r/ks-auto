@@ -8,9 +8,9 @@ type MenuItem = { href: string; label: string };
 type CatalogChild = { href: string; label: string; picture?: string };
 type CatalogItem = {
     id: string;
-    href?: string; // у пункта без детей может быть ссылка
+    href?: string;
     label: string;
-    picture?: string; // иконка сверху
+    picture?: string;
     hidden?: boolean;
     isBigImg?: boolean;
     childsTitle?: string;
@@ -50,7 +50,6 @@ export default function Header() {
         ],
         []
     );
-
     // СТАТИКА: меню в бургере (как bitrix:menu header-burger-menu)
     const burgerMenu: MenuItem[] = useMemo(
         () => [

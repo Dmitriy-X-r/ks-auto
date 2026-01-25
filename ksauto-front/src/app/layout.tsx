@@ -3,6 +3,7 @@ import "./globals.css";
 import "./styles/header.css";
 import "./styles/editor.css";
 import "./styles/new-styles.css";
+import "./styles/Top100.css"
 
 import Header from "@/components/layout/Header/Header";
 import Footer from "@/components/layout/Footer/Footer";
