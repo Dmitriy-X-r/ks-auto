@@ -23,7 +23,6 @@ export function Top100Section({ items }: Props) {
                 </a>
             </div>
 
-            {/* 🔴 ВАЖНО: внешний контейнер, на который завязан CSS */}
             <div id="catalog-slider" className="catalog-slider">
                 <Swiper
                     modules={[Autoplay]}

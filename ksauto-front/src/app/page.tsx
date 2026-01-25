@@ -9,6 +9,7 @@ export default async function HomePage() {
     const cars = await getTop100({ nPageSize: 10 });
   return (
     <>
+    <div id="popup-root"></div>
       <MainBanner
         href="https://t.me/carsplus_sales"
         target="_blank"

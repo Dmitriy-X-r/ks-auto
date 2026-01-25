@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { getMangoPhone } from "@/lib/api/get_mango"; // путь к твоему методу
-
+import './popup.css'
 type Props = {
     phone: string;
     name?: string | null;
     time?: string | null;
     userId: number | string;
     onClose: () => void;
+    portalId: string;
 };
 
-export function ContactPopup({ phone, name, time, userId, onClose }: Props) {
+export function ContactPopup({ phone, name, time, userId, onClose,portalId }: Props) {
     const [loading, setLoading] = useState(false);
     const [mangoPhone, setMangoPhone] = useState<string | null>(null);
     useEffect(() => {
@@ -52,7 +53,9 @@ export function ContactPopup({ phone, name, time, userId, onClose }: Props) {
                         </button>
                     ) : (
                         <div className="popup-phone-wrapper">
-                            <p className="popup__phone">{mangoPhone}</p>
+                            <a href={`tel:${mangoPhone}`} className="popup__phone">
+                                {mangoPhone}
+                            </a>
 
                             <div
                                 className="catalog-popup-contact-info-icon"
@@ -60,33 +63,20 @@ export function ContactPopup({ phone, name, time, userId, onClose }: Props) {
                             >
                 <span
                     className="tooltip"
-                    style={{
-                        position: "absolute",
-                        top: "-40px",
-                        left: "-14px",
-                        display: "none",
-                        width: "200px",
-                        background: "#fff",
-                        border: "1px solid #ccc",
-                        padding: "5px",
-                        borderRadius: "4px",
-                        zIndex: 10,
-                    }}
                 >
-                  <svg
-                      width="15"
-                      height="13"
-                      viewBox="0 0 15 13"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      style={{ position: "absolute", top: "calc(50% - 7.5px)", left: "-14px" }}
-                  >
-                    <path d="M0 6.5L15 0.437822V12.5622L0 6.5Z"></path>
-                  </svg>
-                  <b>Временный номер</b>
-                  <br />
-                  Номер будет доступен для связи с продавцом только сейчас
-                </span>
+  <svg
+      width="15"
+      height="13"
+      viewBox="0 0 15 13"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ position: "absolute", top: "calc(50% - 7.5px)", left: "-14px" }}
+  >
+    <path d="M0 6.5L15 0.437822V12.5622L0 6.5Z" fill="#000"></path>
+  </svg>
+  <b>Временный номер</b>
+  Номер будет доступен для связи с продавцом только сейчас
+</span>
                             </div>
                         </div>
                     )}

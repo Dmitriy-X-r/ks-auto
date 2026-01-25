@@ -91,3 +91,12 @@
 .popup__close::after {
     transform: translate(-50%, -50%) rotate(-45deg);
 }
+.popup-phone-wrapper{
+    flex-direction: row;
+    gap: 5px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #F8F8F7;
+    border-radius: 10px;
+}
