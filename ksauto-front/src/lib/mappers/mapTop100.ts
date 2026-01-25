@@ -21,6 +21,7 @@ export interface CatalogCard {
     driveUnit: string;
     boxCar: string;
     pictures: string[];
+    isPremium: boolean;
 }
 
 export function mapTop100(item: Top100ApiItemRaw): CatalogCard {
@@ -57,6 +58,8 @@ export function mapTop100(item: Top100ApiItemRaw): CatalogCard {
         driveUnit,
         boxCar,
         pictures: ["/local/img/no-photo.png"],
-        isClubService: !!item.PRODVIGENIE,
+        isClubService: false,
+        isPremium:!!item.PRODVIGENIE,
+
     };
 }

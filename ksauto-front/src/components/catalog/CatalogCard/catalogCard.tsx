@@ -20,6 +20,7 @@ interface CatalogCardProps {
         time_job?: string;
         created_by: number | string;
         isClubService?: boolean;
+        isPremium?: boolean;
     };
 }
 
@@ -28,9 +29,8 @@ export function CatalogCard({ item }: CatalogCardProps) {
     const pictures = item.pictures?.length
         ? item.pictures
         : ["/local/img/no-photo.png"];
-
     return (
-        <div className="catalog__items">
+        <div className={`catalog__items ${item.isPremium ? "premium-bg" : ""}`}>
             <div
                 className={`catalog__items-fav ${isFav ? "active" : ""}`}
                 onClick={(e) => {
@@ -86,7 +86,7 @@ export function CatalogCard({ item }: CatalogCardProps) {
                 <div className="catalog__items-block">
                     <a
                         href={item.detailUrl}
-                        className="catalog__items-block-title"
+                        className={`catalog__items-block-title ${item.isPremium ? "premium-bg" : ""}`}
                     >
                         <h3 className="third-title catalog__items-title">
                             {item.marka} {item.model}
