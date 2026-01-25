@@ -5,58 +5,79 @@ import { CatalogCard } from '@/components/catalog/CatalogCard/catalogCard';
 import AdvertisingElement from '@/components/advertising-element/Advertising-element';
 import { CatalogCard as CatalogItem } from '@/lib/mappers/mapTop100';
 import { getLastAds } from '@/lib/api/ads';
-import {
-    mergePremiumRegularFirstPage,
-    mergePremiumRegularNextPages
-} from '@/lib/functions/mergeArray';
 import './LatestArrivals.css';
+import {mergeFirstPage, mergeNextPage,} from '@/lib/catalog-grid/mergePages';
 
 export default function LatestArrivals() {
     const [items, setItems] = useState<CatalogItem[]>([]);
+    const REGULAR_PAGE_SIZE = 11;
+    const [premiumPool, setPremiumPool] = useState<CatalogItem[]>([]);
+    const [regularBuffer, setRegularBuffer] = useState<CatalogItem[]>([]);
+
     const [nextPage, setNextPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        loadItems(1, true);
-    }, []);
+        (async () => {
+            try {
+                const premium = await getLastAds({
+                    premium: true,
+                    pageSize: REGULAR_PAGE_SIZE,
+                });
+                setPremiumPool(premium);
+                await loadItems(1, true, premium);
 
-    async function loadItems(page: number, initial = false) {
+            } catch (e) {
+                console.error("Failed to load premium ads", e);
+            }
+        })();
+    }, []);
+    async function loadItems(page: number, initial = false,premiumOverride?: CatalogItem[]) {
         if (loading) return;
         setLoading(true);
 
         try {
-            const [premiumItems, regularItems] = await Promise.all([
-                getLastAds({ page, premium: true }),
-                getLastAds({ page, premium: false }),
-            ]);
+            const regular = await getLastAds({
+                page,
+                premium: false,
+                pageSize: REGULAR_PAGE_SIZE,
+            });
+            const effectivePremium = premiumOverride ?? premiumPool;
+            const sources = {
+                premiumPool: [...effectivePremium],
+                regularBuffer: [...regularBuffer, ...regular],
+            };
+            const merged =
+                page === 1
+                    ? mergeFirstPage(sources)
+                    : mergeNextPage(sources);
 
-            let merged: CatalogItem[];
-            if (page === 1) {
-                merged = mergePremiumRegularFirstPage(premiumItems, regularItems);
-            } else {
-                merged = mergePremiumRegularNextPages(premiumItems, regularItems);
-            }
+            setItems(prev => (initial ? merged : [...prev, ...merged]));
+            setPremiumPool(sources.premiumPool);
+            setRegularBuffer(sources.regularBuffer);
 
-            setItems(prev => initial ? merged : [...prev, ...merged]);
             setNextPage(page + 1);
-            setHasMore(premiumItems.length + regularItems.length > 0);
-
+            setHasMore(regular.length > 0);
         } catch (err) {
             console.error("Failed to load latest arrivals", err);
         } finally {
             setLoading(false);
         }
     }
+
     return (
         <>
             <div className="sale-title-block new-container">
                 <h2 className="second-title">Последние поступления</h2>
-                <a href="/catalog/" className="link_btn link_btn__light">В каталог</a>
+                <a href="/catalog/" className="link_btn link_btn__light">
+                    В каталог
+                </a>
             </div>
 
             <section className="section_main catalog catalog-new new-container">
                 <div className="catalog__list" id="catalog__list">
+                    {/* Баннер */}
                     <AdvertisingElement className="catalog__items__adverting-element" />
 
                     {items.map(item => (
