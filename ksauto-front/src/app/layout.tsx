@@ -5,7 +5,8 @@ import "./styles/editor.css";
 import "./styles/new-styles.css";
 import "./styles/Top100.css"
 
-import Header from "@/components/layout/Header/Header";
+// import Header from "@/components/layout/Header/Header";
+import HeaderServer from "@/components/layout/Header/HeaderServer";
 import Footer from "@/components/layout/Footer/Footer";
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <div className="fixSizeContainer">
-          <Header />
+          <HeaderServer />
           <div className="containerPage">{children}</div>
           <Footer />
         </div>

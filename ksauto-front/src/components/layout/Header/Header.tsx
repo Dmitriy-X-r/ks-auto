@@ -5,19 +5,38 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 type MenuItem = { href: string; label: string };
 
-type CatalogChild = { href: string; label: string; picture?: string };
-type CatalogItem = {
-    id: string;
-    href?: string;
-    label: string;
-    picture?: string;
-    hidden?: boolean;
-    isBigImg?: boolean;
-    childsTitle?: string;
-    childs?: CatalogChild[];
-};
+// type CatalogChild = { href: string; label: string; picture?: string };
+// type CatalogItem = {
+//     id: string;
+//     href?: string;
+//     label: string;
+//     picture?: string;
+//     hidden?: boolean;
+//     isBigImg?: boolean;
+//     childsTitle?: string;
+//     childs?: CatalogChild[];
+// };
 
-export default function Header() {
+type CatalogChild = { href: string; label: string; picture?: string }
+
+type CatalogItem = {
+    id: string
+    href: string
+    label: string
+    picture?: string
+
+    hidden?: boolean
+    isBigImg?: boolean
+    
+    childsTitle?: string
+    childs?: CatalogChild[]
+}
+
+interface HeaderProps {
+    catalogsData: CatalogItem[]
+}
+
+export default function Header({ catalogsData }: HeaderProps) {
     const [isBurgerOpen, setBurgerOpen] = useState(false);
     const [isBurgerAccountMenu, setBurgerAccountMenu] = useState(false); // имитация состояния "меню аккаунта" внутри бургера
     const [isGeoOpen, setGeoOpen] = useState(false);
@@ -70,61 +89,61 @@ export default function Header() {
     /**
      * Это аналог $arResult для header-catalog.
      */
-    const catalogsData: CatalogItem[] = useMemo(
-        () => [
-            {
-                id: "cars",
-                label: "Автомобили",
-                href: "/catalog/",
-                picture: "/local/templates/new/img/icon/auto.svg",
-            },
-            {
-                id: "com",
-                label: "Ком.транспорт",
-                href: "/com/", // <-- добавил, чтобы можно было кликнуть в "Разместить объявление"
-                picture: "/local/templates/new/img/headerCatalog/komunal.png",
-                childsTitle: "Коммерческий транспорт",
-                childs: [
-                    { href: "/com/light/", label: "Легкие коммерческие", picture: "/local/templates/new/img/headerCatalog/lightCommerc.png" },
-                    { href: "/com/trucks/", label: "Грузовики", picture: "/local/templates/new/img/headerCatalog/gruz.png" },
-                    { href: "/com/tractors/", label: "Седельные тягачи", picture: "/local/templates/new/img/headerCatalog/tigach.png" },
-                ],
-            },
-            {
-                id: "moto",
-                label: "Мототехника",
-                href: "/moto/", // <-- добавил
-                picture: "/local/templates/new/img/headerCatalog/moto.png",
-                childsTitle: "Мототехника",
-                childs: [
-                    { href: "/moto/motorcycles/", label: "Мотоциклы", picture: "/local/templates/new/img/headerCatalog/moto.png/" },
-                    { href: "/moto/scooters/", label: "Скутеры", picture: "/local/templates/new/img/headerCatalog/skut.png/" },
-                    { href: "/moto/atv/", label: "Вездеходы", picture: "/local/templates/new/img/headerCatalog/vezdehod.png/" },
-                    { href: "/moto/snowmobiles/", label: "Снегоходы", picture: "/local/templates/new/img/headerCatalog/snegohod.png/" },
-                ],
-            },
-            {
-                id: "spec",
-                label: "Спец.техника",
-                href: "/spec/", // <-- добавил
-                picture: "/local/templates/new/img/headerCatalog/tigach.png",
-                childsTitle: "Спецтехника",
-                childs: [
-                    { href: "/spec/buses/", label: "Автобусы", picture: "/local/templates/new/img/headerCatalog/spec/bus.png" },
-                    { href: "/spec/cranes/", label: "Автокраны", picture: "/local/templates/new/img/headerCatalog/spec/autokran.png" },
-                    { href: "/spec/bulldozers/", label: "Бульдозеры", picture: "/local/templates/new/img/headerCatalog/spec/buldozer.png" },
-                    { href: "/spec/utility/", label: "Коммунальная", picture: "/local/templates/new/img/headerCatalog/komunal.png" },
-                    { href: "/spec/loaders/", label: "Погрузчики", picture: "/local/templates/new/img/headerCatalog/spec/pogruz.png" },
-                    { href: "/spec/trailers/", label: "Прицепы и полуприцепы", picture: "/local/templates/new/img/headerCatalog/spec/pricep.png" },
-                    { href: "/spec/agro/", label: "Сельскохозяйственная", picture: "/local/templates/new/img/headerCatalog/spec/selsk.png" },
-                    { href: "/spec/road/", label: "Строительная и дорожная", picture: "/local/templates/new/img/headerCatalog/spec/stroit.png" },
-                    { href: "/spec/bodies/", label: "Съемные кузова", picture: "/local/templates/new/img/headerCatalog/spec/siem.png" },
-                    { href: "/spec/excavators/", label: "Экскаваторы", picture: "/local/templates/new/img/headerCatalog/spec/excavator.png" },
-                ],
-            },
-        ],
-        []
-    );
+    // const catalogsData: CatalogItem[] = useMemo(
+    //     () => [
+    //         {
+    //             id: "cars",
+    //             label: "Автомобили",
+    //             href: "/catalog/",
+    //             picture: "/local/templates/new/img/icon/auto.svg",
+    //         },
+    //         {
+    //             id: "com",
+    //             label: "Ком.транспорт",
+    //             href: "/com/", // <-- добавил, чтобы можно было кликнуть в "Разместить объявление"
+    //             picture: "/local/templates/new/img/headerCatalog/komunal.png",
+    //             childsTitle: "Коммерческий транспорт",
+    //             childs: [
+    //                 { href: "/com/light/", label: "Легкие коммерческие", picture: "/local/templates/new/img/headerCatalog/lightCommerc.png" },
+    //                 { href: "/com/trucks/", label: "Грузовики", picture: "/local/templates/new/img/headerCatalog/gruz.png" },
+    //                 { href: "/com/tractors/", label: "Седельные тягачи", picture: "/local/templates/new/img/headerCatalog/tigach.png" },
+    //             ],
+    //         },
+    //         {
+    //             id: "moto",
+    //             label: "Мототехника",
+    //             href: "/moto/", // <-- добавил
+    //             picture: "/local/templates/new/img/headerCatalog/moto.png",
+    //             childsTitle: "Мототехника",
+    //             childs: [
+    //                 { href: "/moto/motorcycles/", label: "Мотоциклы", picture: "/local/templates/new/img/headerCatalog/moto.png/" },
+    //                 { href: "/moto/scooters/", label: "Скутеры", picture: "/local/templates/new/img/headerCatalog/skut.png/" },
+    //                 { href: "/moto/atv/", label: "Вездеходы", picture: "/local/templates/new/img/headerCatalog/vezdehod.png/" },
+    //                 { href: "/moto/snowmobiles/", label: "Снегоходы", picture: "/local/templates/new/img/headerCatalog/snegohod.png/" },
+    //             ],
+    //         },
+    //         {
+    //             id: "spec",
+    //             label: "Спец.техника",
+    //             href: "/spec/", // <-- добавил
+    //             picture: "/local/templates/new/img/headerCatalog/tigach.png",
+    //             childsTitle: "Спецтехника",
+    //             childs: [
+    //                 { href: "/spec/buses/", label: "Автобусы", picture: "/local/templates/new/img/headerCatalog/spec/bus.png" },
+    //                 { href: "/spec/cranes/", label: "Автокраны", picture: "/local/templates/new/img/headerCatalog/spec/autokran.png" },
+    //                 { href: "/spec/bulldozers/", label: "Бульдозеры", picture: "/local/templates/new/img/headerCatalog/spec/buldozer.png" },
+    //                 { href: "/spec/utility/", label: "Коммунальная", picture: "/local/templates/new/img/headerCatalog/komunal.png" },
+    //                 { href: "/spec/loaders/", label: "Погрузчики", picture: "/local/templates/new/img/headerCatalog/spec/pogruz.png" },
+    //                 { href: "/spec/trailers/", label: "Прицепы и полуприцепы", picture: "/local/templates/new/img/headerCatalog/spec/pricep.png" },
+    //                 { href: "/spec/agro/", label: "Сельскохозяйственная", picture: "/local/templates/new/img/headerCatalog/spec/selsk.png" },
+    //                 { href: "/spec/road/", label: "Строительная и дорожная", picture: "/local/templates/new/img/headerCatalog/spec/stroit.png" },
+    //                 { href: "/spec/bodies/", label: "Съемные кузова", picture: "/local/templates/new/img/headerCatalog/spec/siem.png" },
+    //                 { href: "/spec/excavators/", label: "Экскаваторы", picture: "/local/templates/new/img/headerCatalog/spec/excavator.png" },
+    //             ],
+    //         },
+    //     ],
+    //     []
+    // );
 
     // helpers — повторяем script.js
     const isMobile = () => window.innerWidth <= 600;
@@ -242,10 +261,10 @@ export default function Header() {
                     <div className="new-container">
                         {/* GEO desktop */}
                         <div className="header-geo" onClick={() => setGeoOpen(true)} role="button" tabIndex={0}>
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M0.803066 0.437536C0.952166 0.30091 1.16889 0.267554 1.35217 0.35302L11.3404 5.01061C11.5216 5.0951 11.6351 5.27943 11.6289 5.47928C11.6227 5.67912 11.498 5.85606 11.3119 5.92915L7.28464 7.51091L5.35789 11.385C5.26885 11.564 5.08173 11.6728 4.8821 11.6616C4.68248 11.6503 4.50874 11.5212 4.44036 11.3334L0.671015 0.977184C0.601848 0.787149 0.653966 0.574161 0.803066 0.437536ZM2.02356 1.76947L4.98147 9.89625L6.47499 6.89324C6.53016 6.7823 6.62456 6.6958 6.73989 6.65051L9.86162 5.42441L2.02356 1.76947Z"
-                                    fill="white"
+                                    fill="#ffffff"
                                 />
                             </svg>
                             <p>Любой город</p>

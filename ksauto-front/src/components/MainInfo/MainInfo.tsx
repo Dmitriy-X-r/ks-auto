@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import './MainInfo.css'
+import { getMainSection } from "@/lib/api/mainSection";
+import { getInfoBeforeReport } from "@/lib/api/infoBeforeReport";
+import { InfoBeforeReportResponse } from "@/lib/api/infoBeforeReport";
 
 type Brand = { name: string; code: string }; // code пригодится для URL marka_{code}
 
@@ -21,7 +24,13 @@ function formatNumber(n: number) {
 
 export default function MainInfo() {
     // ====== МОКИ (потом заменишь на API) ======
-    const offersCountMock = 128_542;
+    const [offersCount, setOffersCount] = useState<number | null>(null);
+    const [offersWord, setOffersWord] = useState<string>("предложений");
+    const [offersUrl, setOffersUrl] = useState<string>();
+
+    const [searchValue, setSearchValue] = useState("");
+    const [carInfo, setCarInfo] = useState<InfoBeforeReportResponse["result"] | null>(null);
+    const [searchError, setSearchError] = useState(false);
 
     const popularBrandsMock: Brand[] = useMemo(
         () => [
@@ -41,6 +50,27 @@ export default function MainInfo() {
     // ====== popup "Скачать приложение" (PC версия) ======
     const [isAppPopupOpen, setAppPopupOpen] = useState(false);
     const [appPopupTab, setAppPopupTab] = useState<"iOS" | "Android">("iOS");
+
+    useEffect(() => {
+        getMainSection()
+            .then(data => {
+            console.log("API data:", data);
+            const countStr = data.result.block1.count;
+            console.log("Count string:", countStr);
+
+            const countNum = parseInt(countStr, 10) || 0;
+            setOffersCount(countNum);
+
+            const url = data.result.block1.title_url1;
+            setOffersUrl(url);
+
+            setOffersWord(data.result.block1.count_text || "предложений");
+            })
+        .catch(() => {
+            setOffersCount(0);
+            setOffersWord("предложений");
+            });
+        }, []);
 
     useEffect(() => {
         // закрытие по Esc
@@ -78,7 +108,7 @@ export default function MainInfo() {
         return () => btn.removeEventListener("click", onClick);
     }, []);
 
-    const offersWord = declensionRu(offersCountMock, "предложение", "предложения", "предложений");
+    // const offersWord = declensionRu(offersCount, "предложение", "предложения", "предложений");
 
     return (
         <div className="main-wrapper-body new-container">
@@ -89,10 +119,14 @@ export default function MainInfo() {
                     <p> Доступно по всей России </p>
 
                     <a
-                        href="/catalog/cars/"
+                        href={offersUrl}
                         className="link_btn link_btn__dark mob-link_btn___catalog-btn desk-catalog-vse desk-catalog-vse-pc"
                     >
-                        Показать {formatNumber(offersCountMock)} {offersWord}
+                        {offersCount !== null && (
+                            <>
+                            Показать {formatNumber(offersCount)} {offersWord}
+                            </>
+                        )}
                     </a>
 
                     <a
@@ -273,13 +307,20 @@ export default function MainInfo() {
                             data-action="get-middle-costs"
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                // TODO: сюда подключим твой API (VIN/номер) и дальнейшую логику
-                                // пока просто заглушка
-                                alert("TODO: запрос отчёта (мок)");
+                                setSearchError(false);
+                                setCarInfo(null);
+
+                                getInfoBeforeReport(searchValue)
+                                .then((data) => {
+                                    setCarInfo(data.result);
+                                })
+                                .catch(() => {
+                                    setSearchError(true);
+                                });
                             }}
                         >
                             <label>
-                                <input type="text" placeholder="Госномер или VIN" name="VIN_OR_NUBMER" required />
+                                <input type="text" placeholder="Госномер или VIN" name="VIN_OR_NUBMER" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} required />
                             </label>
                             <button className="link_btn link_btn__dark" type="submit">
                                 Получить отчёт
@@ -290,46 +331,47 @@ export default function MainInfo() {
                     {/* Эти блоки на старом сайте показывались/прятались скриптами.
                         Пока оставляем в DOM как в PHP (стили сами разрулят display), а потом подключим логику. */}
 
-                    <div className="costs-result">
-                        <p className="get-costs-title">Автомобиль найден</p>
-                        <p className="costs-subtitle">Детальная информация доступна в отчёте</p>
+                    {carInfo && ( 
+                        <div className="costs-result">
+                            <p className="get-costs-title">Автомобиль найден</p>
+                            <p className="costs-subtitle">Детальная информация доступна в отчёте</p>
 
-                        <div className="costs-result-item">
-                            <div className="costs-result-item-img">
-                                <img src="/img/no-photo.png" alt="" />
+                            <div className="costs-result-item">
+                                <div className="costs-result-item-img">
+                                    <img
+                                        src={carInfo.image ?? "/img/img-type-1.png"}
+                                        alt=""
+                                    />
+                                </div>
+                                <div className="costs-result-item-text">
+                                    <p className="costs-result-item-title">
+                                        {carInfo.marka} {carInfo.model}
+                                    </p>
+                                    <div className="costs-result-item-tabs">
+                                         {carInfo.year ? <span>{carInfo.year} г.</span> : null}
+                                        {carInfo.power ? <span>{Math.round(carInfo.power)} л.с.</span> : null}
+                                    </div>
+                                    <p className="costs-result-item-price"></p>
+                                </div>
                             </div>
-                            <div className="costs-result-item-text">
-                                <p className="costs-result-item-title"></p>
-                                <div className="costs-result-item-tabs"></div>
-                                <p className="costs-result-item-price"></p>
+
+                            <div className="costs-result-buttons">
+                                <div className="costs-result-buttons-reset" onClick={() => setCarInfo(null)}>Вернуться</div>
+
+                                {/* TODO: link зависит от авторизации/типа юзера — позже подключим */}
+                                <a href="/auth/" className="costs-result-buttons-add link_btn link_btn__dark">
+                                    Получить отчет
+                                </a>
                             </div>
                         </div>
-
-                        <div className="costs-result-buttons">
-                            <div className="costs-result-buttons-reset">Вернуться</div>
-
-                            {/* TODO: link зависит от авторизации/типа юзера — позже подключим */}
-                            <a href="/auth/" className="costs-result-buttons-add link_btn link_btn__dark">
-                                Получить отчет
-                            </a>
-                        </div>
-                    </div>
-
-                    <div className="costs-no-result">
-                        <p className="get-costs-title">Автомобиль не найден</p>
-                        <p className="costs-subtitle">Попробуйте другой госномер или VIN</p>
-
-                        <div className="costs-result-item">
-                            <div className="costs-result-item-img">
-                                <img src="/local/templates/new/img/img-no-res.png" alt="" />
-                            </div>
-                            <div className="costs-result-item-text"></div>
+                    )}
+                    {searchError && (
+                        <div className="costs-no-result">
+                            <p className="get-costs-title">Автомобиль не найден</p>
+                            <p className="costs-subtitle">Попробуйте другой госномер или VIN</p>
                         </div>
 
-                        <div className="costs-result-buttons">
-                            <div className="costs-result-buttons-reset link_btn link_btn__dark">Вернуться</div>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
