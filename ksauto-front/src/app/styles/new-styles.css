@@ -5757,3 +5757,6 @@ body:has(.testSiteLabel){
 .desk-catalog-vse-mb {
     display: none !important;
 }
+.premium-bg{
+    background-color: green;
+}

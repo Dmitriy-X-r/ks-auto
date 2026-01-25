@@ -916,7 +916,7 @@ font.notetext {
 }
 
 .catalog__items {
-    width: 462px;
+    /*width: 462px;*/
     height: 100%;
     position: relative;
     margin-bottom: 34px;

@@ -6,4 +6,6 @@ export const API_ENDPOINTS={
     news: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.news`,
     top100: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.top100`,
     get_mano: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.mango_phone`,
+    get_last_ads: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.last_ads`,
+
 }

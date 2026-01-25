@@ -8,11 +8,11 @@ export interface Top100ApiItemRaw {
     ACTIVE_FROM: string;
     DETAIL_PAGE_URL: string | null;
     PRICE: string;
-    CITY?: string;
-    PHONE?: string;
+    CITY?: string | null;
+    PHONE?: string | null;
     PRODVIGENIE?: boolean;
-    DISPLAY_NAME?: string;
-    TIME_JOB?: string;
+    DISPLAY_NAME: string | null;
+    TIME_JOB?: string | null;
 }
 interface Top100ApiResponse {
     result: {
