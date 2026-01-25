@@ -5,7 +5,7 @@ type MainBannerProps = {
     href: string;
     target?: "_blank" | "_self";
     noIndex?: boolean;
-    comment?: string; // аналог COMMENTS (erid)
+    comment?: string;
     imageSrc?: string;
     imageAlt?: string;
 };
@@ -37,7 +37,7 @@ export default function MainBanner({
     // но Яндекс его всё ещё понимает.
     // Если хочешь — можем заменить на meta / robots позже.
     if (noIndex) {
-        return <noindex>{banner}</noindex>;
+        return <div>{banner}</div>;
     }
 
     return banner;
