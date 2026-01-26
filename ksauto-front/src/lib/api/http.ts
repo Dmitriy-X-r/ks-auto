@@ -1,26 +1,41 @@
-type FetchOptions = RequestInit & {
-    params?: Record<string, string | number>
-}
+
+type ApiFetchOptions = RequestInit & {
+    params?: Record<string, string | number | boolean | undefined>;
+};
+
+const basicAuth = Buffer
+    .from(`${process.env.API_BASIC_LOGIN}:${process.env.API_BASIC_PASSWORD}`)
+    .toString('base64');
 
 export async function apiFetch<T>(
     url: string,
-    { params, ...options }: FetchOptions = {}
+    options?: ApiFetchOptions
 ): Promise<T> {
-    const query = params
-        ? '?' +
-        new URLSearchParams(
-            Object.entries(params).map(([k, v]) => [k, String(v)])
-        ).toString()
-        : ''
+    let finalUrl = url;
 
-    const res = await fetch(url + query, {
-        ...options,
-        next: { revalidate: 60 },
-    })
+    if (options?.params) {
+        const searchParams = new URLSearchParams();
 
-    if (!res.ok) {
-        throw new Error(`API error: ${res.status}`)
+        Object.entries(options.params).forEach(([key, value]) => {
+            if (value !== undefined) {
+                searchParams.append(key, String(value));
+            }
+        });
+
+        finalUrl += `?${searchParams.toString()}`;
     }
 
-    return res.json()
+    const res = await fetch(finalUrl, {
+        ...options,
+        headers: {
+            ...options?.headers,
+            Authorization: `Basic ${basicAuth}`,
+        },
+    });
+
+    if (!res.ok) {
+        throw new Error(`API error ${res.status}`);
+    }
+
+    return res.json();
 }
