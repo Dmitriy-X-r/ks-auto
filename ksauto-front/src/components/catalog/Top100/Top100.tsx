@@ -13,7 +13,9 @@ type Props = {
 
 export function Top100Section({ items }: Props) {
     if (!items.length) return null;
-
+    const uniqueCars = Array.from(
+        new Map(items.map(item => [`${item.id}-${item.created_by}`, item])).values()
+    );
     return (
         <section className="section_main catalog catalog-new catalog-premium new-container">
             <div className="sale-title-block premium">
@@ -41,8 +43,11 @@ export function Top100Section({ items }: Props) {
                         1400: { slidesPerView: 4, spaceBetween: 16 },
                     }}
                 >
-                    {items.map(item => (
-                        <SwiperSlide key={item.id} className="catalog-slide">
+                    {uniqueCars.map(item => (
+                        <SwiperSlide
+                            key={`${item.id}-${item.created_by}`}
+                            className="catalog-slide"
+                        >
                             <CatalogCard item={item} />
                         </SwiperSlide>
                     ))}

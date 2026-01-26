@@ -37,3 +37,12 @@ export async function getLastAds({
 
     return response.result.products.map(mapTop100);
 }
+export async function getLastAdsClient({
+                                           page = 1,
+                                           pageSize = 11,
+                                           premium = false
+                                       }) {
+    const res = await fetch(`/api/last-ads?page=${page}&pageSize=${pageSize}&premium=${premium}`);
+    if (!res.ok) throw new Error("Failed to fetch last ads from proxy");
+    return res.json();
+}

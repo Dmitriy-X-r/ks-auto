@@ -1,3 +1,4 @@
+'use client';
 import { ContactButton } from "@/components/catalog/ContactButton/ContactButton";
 import {useState} from "react";
 import './catalogCard.css';
@@ -31,7 +32,6 @@ export function CatalogCard({ item }: CatalogCardProps) {
     const pictures = item.pictures?.length
         ? item.pictures
         : ["/local/img/no-photo.png"];
-    console.log(pictures)
     return (
         <div className={`catalog__items`}>
             <div
