@@ -912,10 +912,6 @@
     text-align: center;
 }
 
-.costs-result,
-.costs-no-result {
-    display: none;
-}
 .show-result .costs-result,
 .show-no-result .costs-no-result {
     display: block;

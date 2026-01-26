@@ -1018,7 +1018,7 @@ p.sale_list__check:nth-child(2){
     display: flex;
     overflow: hidden;
     flex-wrap: wrap;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     box-shadow: 1px 1px 1px 1px #f0f0f0, -1px -1px 1px 1px #f0f0f0;
 }
 

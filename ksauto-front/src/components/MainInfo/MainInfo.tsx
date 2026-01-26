@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import './MainInfo.css'
 import { getMainSection } from "@/lib/api/mainSection";
 import { getInfoBeforeReport } from "@/lib/api/infoBeforeReport";
-import { InfoBeforeReportResponse } from "@/lib/api/infoBeforeReport";
+import { isInfoBeforeReportError } from "@/lib/api/infoBeforeReport";
+import type { InfoBeforeReportSuccess } from "@/lib/api/infoBeforeReport";
 
 type Brand = { name: string; code: string }; // code пригодится для URL marka_{code}
 
@@ -29,8 +30,12 @@ export default function MainInfo() {
     const [offersUrl, setOffersUrl] = useState<string>();
 
     const [searchValue, setSearchValue] = useState("");
-    const [carInfo, setCarInfo] = useState<InfoBeforeReportResponse["result"] | null>(null);
-    const [searchError, setSearchError] = useState(false);
+    
+    const [carInfo, setCarInfo] = useState<InfoBeforeReportSuccess | null>(null);
+    type CostsView = "form" | "result" | "no-result";
+
+    const [costsView, setCostsView] = useState<CostsView>("form");
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const popularBrandsMock: Brand[] = useMemo(
         () => [
@@ -295,43 +300,74 @@ export default function MainInfo() {
 
                 {/* ===== get-costs ===== */}
                 <div className="get-costs" data-action="get-report">
-                    <div className="get-costs-wrapper">
-                        <p className="get-costs-title">
-                            Проверьте любой автомобиль перед покупкой <span className="error"></span>
-                        </p>
-                        <p className="get-costs-subtitle">
-                            Ограничения, штрафы, возможные владельцы, участие в ДТП и многое другое
-                        </p>
+                     {costsView === "form" && (
+                        <div className="get-costs-wrapper">
+                            <p className="get-costs-title">
+                                Проверьте любой автомобиль перед покупкой <span className="error"></span>
+                            </p>
+                            
+                            {errorMessage && (
+                            <p className="get-costs-error">
+                                {errorMessage}
+                            </p>
+                            )}
+                            <p className="get-costs-subtitle">
+                                Ограничения, штрафы, возможные владельцы, участие в ДТП и многое другое
+                            </p>
 
-                        <form
-                            data-action="get-middle-costs"
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                setSearchError(false);
-                                setCarInfo(null);
+                            <form
+                                data-action="get-middle-costs"
+                                onSubmit={(e) => {
+                                    console.log("salam aleikym!!");
+                                    e.preventDefault();
+                                    setCarInfo(null);
 
-                                getInfoBeforeReport(searchValue)
-                                .then((data) => {
-                                    setCarInfo(data.result);
-                                })
-                                .catch(() => {
-                                    setSearchError(true);
-                                });
-                            }}
-                        >
-                            <label>
-                                <input type="text" placeholder="Госномер или VIN" name="VIN_OR_NUBMER" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} required />
-                            </label>
-                            <button className="link_btn link_btn__dark" type="submit">
-                                Получить отчёт
-                            </button>
-                        </form>
-                    </div>
+                                    getInfoBeforeReport(searchValue)
+                                    .then((data) => {
+                                        const result = data.result;
+
+                                        if (isInfoBeforeReportError(result)) {
+                                        setCarInfo(null);
+                                        setErrorMessage(result.ERROR);
+                                        setCostsView("form");
+                                        return;
+                                        }
+
+                                        if (!result) {
+                                        setCarInfo(null);
+                                        setErrorMessage("Автомобиль не найден");
+                                        setCostsView("no-result");
+                                        return;
+                                        }
+
+                                        setErrorMessage(null);
+                                        setCarInfo(result);
+                                        setCostsView("result");
+                                    })
+                                    .catch(() => {
+                                        setCarInfo(null);
+                                        setErrorMessage("Ошибка сервера. Попробуйте позже");
+                                        setCostsView("no-result");
+                                    });
+
+                                    console.log(carInfo);
+                                    console.log(errorMessage);
+                                }}
+                            >
+                                <label>
+                                    <input type="text" placeholder="Госномер или VIN" name="VIN_OR_NUBMER" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} required />
+                                </label>
+                                <button className="link_btn link_btn__dark" type="submit">
+                                    Получить отчёт
+                                </button>
+                            </form>
+                        </div>
+                     )}
 
                     {/* Эти блоки на старом сайте показывались/прятались скриптами.
                         Пока оставляем в DOM как в PHP (стили сами разрулят display), а потом подключим логику. */}
 
-                    {carInfo && ( 
+                    {costsView === "result" && carInfo && (
                         <div className="costs-result">
                             <p className="get-costs-title">Автомобиль найден</p>
                             <p className="costs-subtitle">Детальная информация доступна в отчёте</p>
@@ -356,8 +392,16 @@ export default function MainInfo() {
                             </div>
 
                             <div className="costs-result-buttons">
-                                <div className="costs-result-buttons-reset" onClick={() => setCarInfo(null)}>Вернуться</div>
-
+                                <div
+                                    className="costs-result-buttons-reset"
+                                    onClick={() => {
+                                        setCarInfo(null);
+                                        setErrorMessage(null);
+                                        setCostsView("form");
+                                    }}
+                                >
+                                    Вернуться
+                                </div>
                                 {/* TODO: link зависит от авторизации/типа юзера — позже подключим */}
                                 <a href="/auth/" className="costs-result-buttons-add link_btn link_btn__dark">
                                     Получить отчет
@@ -365,10 +409,20 @@ export default function MainInfo() {
                             </div>
                         </div>
                     )}
-                    {searchError && (
+                    {costsView === "no-result" && (
                         <div className="costs-no-result">
                             <p className="get-costs-title">Автомобиль не найден</p>
                             <p className="costs-subtitle">Попробуйте другой госномер или VIN</p>
+                            <div
+                                className="costs-result-buttons-reset"
+                                onClick={() => {
+                                    setCarInfo(null);
+                                    setErrorMessage(null);
+                                    setCostsView("form");
+                                }}
+                            >
+                                Вернуться
+                            </div>
                         </div>
 
                     )}

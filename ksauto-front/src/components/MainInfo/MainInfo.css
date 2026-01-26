@@ -11,3 +11,10 @@
     justify-content: center;
     gap: 4px;
 }
+
+.get-costs-error{
+    font-family: 'Inter-Regular';
+    font-size: 13px;
+    color: #E23737;
+    margin-bottom: 10px;
+}
