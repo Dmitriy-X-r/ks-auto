@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CatalogCard } from '@/components/catalog/CatalogCard/catalogCard';
 import AdvertisingElement from '@/components/advertising-element/Advertising-element';
 import { CatalogCard as CatalogItem } from '@/lib/mappers/mapTop100';
-import { getLastAds } from '@/lib/api/ads';
+import {getLastAds, getLastAdsClient} from '@/lib/api/ads';
 import './LatestArrivals.css';
 import {mergeFirstPage, mergeNextPage,} from '@/lib/catalog-grid/mergePages';
 
@@ -21,13 +21,9 @@ export default function LatestArrivals() {
     useEffect(() => {
         (async () => {
             try {
-                const premium = await getLastAds({
-                    premium: true,
-                    pageSize: REGULAR_PAGE_SIZE,
-                });
+                const premium = await getLastAdsClient({ premium: true, pageSize: REGULAR_PAGE_SIZE });
                 setPremiumPool(premium);
                 await loadItems(1, true, premium);
-
             } catch (e) {
                 console.error("Failed to load premium ads", e);
             }
@@ -38,10 +34,9 @@ export default function LatestArrivals() {
         setLoading(true);
 
         try {
-            const regular = await getLastAds({
-                page,
-                premium: false,
-                pageSize: REGULAR_PAGE_SIZE,
+            const regular = await getLastAdsClient({
+                page, premium: false,
+                pageSize: REGULAR_PAGE_SIZE
             });
             const effectivePremium = premiumOverride ?? premiumPool;
             const sources = {
@@ -81,7 +76,7 @@ export default function LatestArrivals() {
                     <AdvertisingElement className="catalog__items__adverting-element" />
 
                     {items.map(item => (
-                        <div key={item.id} className="catalog__items news-item">
+                        <div key={`${item.id}-${item.created_by}`} className="catalog__items news-item">
                             <CatalogCard item={item} />
                         </div>
                     ))}

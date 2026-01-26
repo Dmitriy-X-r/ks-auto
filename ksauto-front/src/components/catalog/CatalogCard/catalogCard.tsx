@@ -1,3 +1,4 @@
+'use client';
 import { ContactButton } from "@/components/catalog/ContactButton/ContactButton";
 import { useState } from "react";
 import "./catalogCard.css";
