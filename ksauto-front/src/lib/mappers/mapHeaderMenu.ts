@@ -17,6 +17,8 @@ export interface CatalogItemUI {
 
 const API_DOMAIN = 'https://hblocks-test.ru'
 
+// const API_DOMAIN = 'https://dev.ks-auto.ru'
+
 export function mapHeaderMenu(item: HeaderMenuItemRaw): CatalogItemUI {
     return {
         id: item.PARAMS?.SECTION_CODE || item.TEXT,

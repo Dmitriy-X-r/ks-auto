@@ -45,6 +45,11 @@ export function CatalogCard({ item }: CatalogCardProps) {
             <div className="catalog__items-link">
                 {/* Стикеры */}
                 <div className="catalog-sticker-list">
+                    {item.isPremium && (
+                        <div className="catalog__items-adcheck">
+                            <img src="/img/crown.svg" alt="crown" />
+                        </div>
+                    )}
                     {item.isClubService && (
                         <p className="sale_list__check catalog__items-check">
                             Клубный сервис
