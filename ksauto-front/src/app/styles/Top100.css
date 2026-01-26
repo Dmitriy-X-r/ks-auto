@@ -49,9 +49,6 @@
 }
 
 /* убираем margin у "слайда" — gap делает Swiper spaceBetween */
-.catalog-premium .catalog-slide {
-  margin-right: 18px !important;
-}
 
 /* чтобы карточка занимала всю ширину слайда */
 #catalog-slider .swiper-slide {
