@@ -24,6 +24,7 @@ interface CatalogCardProps {
     created_by: number | string;
     isClubService?: boolean;
     isPremium?: boolean;
+    clubServiceText?: string;
   };
 }
 
@@ -55,10 +56,10 @@ export function CatalogCard({ item }: CatalogCardProps) {
               <img src="/img/crown.svg" alt="crown" />
             </div>
           )}
-          {item.isClubService && (
-            <p className="sale_list__check catalog__items-check">
-              Клубный сервис
-            </p>
+          {item.clubServiceText && (
+              <p className="sale_list__check catalog__items-check">
+                {item.clubServiceText}
+              </p>
           )}
         </div>
 

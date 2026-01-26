@@ -22,6 +22,7 @@ export interface CatalogCard {
     boxCar: string;
     pictures: string[];
     isPremium: boolean;
+    clubServiceText: string | null;
 }
 
 export function mapTop100(item: Top100ApiItemRaw): CatalogCard {
@@ -73,7 +74,7 @@ export function mapTop100(item: Top100ApiItemRaw): CatalogCard {
         pictures: item.PICTURES?.length
             ? item.PICTURES
             : ["/img/no-img.webp"],
-        isClubService: false,
         isPremium: !!item.PRODVIGENIE,
+        clubServiceText: item.CLUB_SERVICE?.trim() || "",
     };
 }

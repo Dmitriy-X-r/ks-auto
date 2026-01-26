@@ -15,6 +15,8 @@ export interface Top100ApiItemRaw {
     TIME_JOB?: string | null;
     CARD_DISPLAY_PROPERTY: string | null;
     PICTURES?: string[] | null;
+    CLUB_SERVICE?:string | null;
+    CLUB_SERVICE_TEXT?: string | null;
 }
 interface Top100ApiResponse {
     result: {
