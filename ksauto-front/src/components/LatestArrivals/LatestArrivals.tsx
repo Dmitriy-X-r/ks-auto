@@ -29,7 +29,7 @@ export default function LatestArrivals() {
             }
         })();
     }, []);
-    async function loadItems(page: number, initial = false,premiumOverride?: CatalogItem[]) {
+    async function loadItems(page: number, initial = false, premiumOverride?: CatalogItem[]) {
         if (loading) return;
         setLoading(true);
 
@@ -39,14 +39,19 @@ export default function LatestArrivals() {
                 pageSize: REGULAR_PAGE_SIZE
             });
             const effectivePremium = premiumOverride ?? premiumPool;
+
             const sources = {
                 premiumPool: [...effectivePremium],
                 regularBuffer: [...regularBuffer, ...regular],
             };
+
+            // Set с уже добавленными элементами, чтобы ключи были уникальными
+            const existingIds = new Set(items.map(i => `${i.id}-${i.created_by}`));
+
             const merged =
                 page === 1
-                    ? mergeFirstPage(sources)
-                    : mergeNextPage(sources);
+                    ? mergeFirstPage(sources, existingIds)
+                    : mergeNextPage(sources, existingIds);
 
             setItems(prev => (initial ? merged : [...prev, ...merged]));
             setPremiumPool(sources.premiumPool);
@@ -60,7 +65,6 @@ export default function LatestArrivals() {
             setLoading(false);
         }
     }
-
     return (
         <>
             <div className="sale-title-block new-container">
@@ -75,8 +79,8 @@ export default function LatestArrivals() {
                     {/* Баннер */}
                     <AdvertisingElement className="catalog__items__adverting-element" />
 
-                    {items.map(item => (
-                        <div key={`${item.id}-${item.created_by}`} className="catalog__items news-item">
+                    {items.map((item,index) => (
+                        <div key={`${item.id}-${item.created_by}-${item.detailUrl}-${index}`} className="catalog__items news-item">
                             <CatalogCard item={item} />
                         </div>
                     ))}
