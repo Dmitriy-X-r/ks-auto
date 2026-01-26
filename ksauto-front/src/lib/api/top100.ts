@@ -13,6 +13,7 @@ export interface Top100ApiItemRaw {
     PRODVIGENIE?: boolean;
     DISPLAY_NAME: string | null;
     TIME_JOB?: string | null;
+    CARD_DISPLAY_PROPERTY: string | null;
 }
 interface Top100ApiResponse {
     result: {
