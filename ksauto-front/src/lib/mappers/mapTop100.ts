@@ -70,7 +70,9 @@ export function mapTop100(item: Top100ApiItemRaw): CatalogCard {
         mileage,
         driveUnit,
         boxCar,
-        pictures: ["/local/img/no-photo.png"],
+        pictures: item.PICTURES?.length
+            ? item.PICTURES
+            : ["/img/no-img.webp"],
         isClubService: false,
         isPremium: !!item.PRODVIGENIE,
     };

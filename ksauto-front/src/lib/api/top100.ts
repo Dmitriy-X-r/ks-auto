@@ -14,6 +14,7 @@ export interface Top100ApiItemRaw {
     DISPLAY_NAME: string | null;
     TIME_JOB?: string | null;
     CARD_DISPLAY_PROPERTY: string | null;
+    PICTURES?: string[] | null;
 }
 interface Top100ApiResponse {
     result: {

@@ -26,10 +26,12 @@ interface CatalogCardProps {
 }
 
 export function CatalogCard({ item }: CatalogCardProps) {
+    const BASE_URL = "https://dev.ks-auto.ru";
     const [isFav, setFav] = useState(false);
     const pictures = item.pictures?.length
         ? item.pictures
         : ["/local/img/no-photo.png"];
+    console.log(pictures)
     return (
         <div className={`catalog__items`}>
             <div
@@ -63,7 +65,7 @@ export function CatalogCard({ item }: CatalogCardProps) {
                         {pictures.map((src, idx) => (
                             <img
                                 key={idx}
-                                src={src}
+                                src={`${BASE_URL}${src}`}
                                 className="catalog__items-picture-image"
                                 alt={`${item.marka} ${item.model}`}
                                 loading="lazy"
