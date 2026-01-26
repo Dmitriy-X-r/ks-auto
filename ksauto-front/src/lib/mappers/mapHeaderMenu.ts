@@ -15,9 +15,9 @@ export interface CatalogItemUI {
     childs?: CatalogChildUI[]
 }
 
-const API_DOMAIN = 'https://hblocks-test.ru'
+// const API_DOMAIN = 'https://hblocks-test.ru'
 
-// const API_DOMAIN = 'https://dev.ks-auto.ru'
+const API_DOMAIN = 'https://dev.ks-auto.ru'
 
 export function mapHeaderMenu(item: HeaderMenuItemRaw): CatalogItemUI {
     return {
