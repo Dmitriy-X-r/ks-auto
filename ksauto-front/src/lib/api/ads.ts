@@ -8,20 +8,32 @@ export interface GetAdsParams {
     premium?: boolean;
 }
 
-export async function getLastAds({ page = 1, pageSize = 11, premium = false }: GetAdsParams = {}): Promise<CatalogCard[]> {
-    const response = await apiFetch<{ result: { products: any[] } }>(API_ENDPOINTS.get_last_ads, {
-        params: {
-            type: 'car',
-            device_: 'next',
-            app_version: '0.9.0',
-            'nav[iNumPage]': page,
-            'nav[nPageSize]': pageSize,
-            ...(premium
-                ? { 'filter[!PROPERTY_PRODVIGENIE_I]': 'false', 'order[PROPERTY_PRODVIGENIE_I]': 'desc' }
-                : { 'filter[PROPERTY_PRODVIGENIE_I]': 'false', 'order[ACTIVE_FROM]': 'desc' }),
-        },
-    });
+export async function getLastAds({
+                                     page = 1,
+                                     pageSize = 11,
+                                     premium = false,
+                                 }: GetAdsParams = {}): Promise<CatalogCard[]> {
+    // базовые параметры
+    const params: Record<string, any> = {
+        type: 'car',
+        device_: 'next',
+        app_version: '0.9.0',
+        'nav[iNumPage]': page,
+        'nav[nPageSize]': pageSize,
+    };
 
-    // Универсальный маппер
+    // фильтр и сортировка
+    let url = API_ENDPOINTS.get_last_ads;
+    if (premium) {
+        // продвинутые машины — фильтр в URL, чтобы не кодировалось !
+        url += '?filter[!PROPERTY_PRODVIGENIE_I]=false';
+        params['order[PROPERTY_PRODVIGENIE_I]'] = 'desc';
+    } else {
+        params['filter[PROPERTY_PRODVIGENIE_I]'] = 'false';
+        params['order[ACTIVE_FROM]'] = 'desc';
+    }
+
+    const response = await apiFetch<{ result: { products: any[] } }>(url, { params });
+
     return response.result.products.map(mapTop100);
 }

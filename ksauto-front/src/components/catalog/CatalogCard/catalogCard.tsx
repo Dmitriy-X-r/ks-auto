@@ -1,5 +1,6 @@
 import { ContactButton } from "@/components/catalog/ContactButton/ContactButton";
 import {useState} from "react";
+import './catalogCard.css';
 
 interface CatalogCardProps {
     item: {
@@ -30,7 +31,7 @@ export function CatalogCard({ item }: CatalogCardProps) {
         ? item.pictures
         : ["/local/img/no-photo.png"];
     return (
-        <div className={`catalog__items ${item.isPremium ? "premium-bg" : ""}`}>
+        <div className={`catalog__items`}>
             <div
                 className={`catalog__items-fav ${isFav ? "active" : ""}`}
                 onClick={(e) => {
@@ -83,10 +84,10 @@ export function CatalogCard({ item }: CatalogCardProps) {
                     </div>
                 </a>
 
-                <div className="catalog__items-block">
+                <div className={`catalog__items-block ${item.isPremium ? "catalog__premium-bg" : ""}`}>
                     <a
                         href={item.detailUrl}
-                        className={`catalog__items-block-title ${item.isPremium ? "premium-bg" : ""}`}
+                        className={`catalog__items-block-title`}
                     >
                         <h3 className="third-title catalog__items-title">
                             {item.marka} {item.model}

@@ -26,20 +26,32 @@ export interface CatalogCard {
 
 export function mapTop100(item: Top100ApiItemRaw): CatalogCard {
     const nameParts = item.NAME.split(",").map(s => s.trim());
-    const [marka, modelRaw, yearDriveBox] = nameParts;
 
-    let year = '';
-    let driveUnit = '';
-    let boxCar = '';
-    if (yearDriveBox) {
-        const regex = /(\d{4})г\.,\s*(.*)\s*,\s*(.*)/;
-        const match = yearDriveBox.match(regex);
-        if (match) {
-            year = match[1];
-            driveUnit = match[2].toLowerCase().includes('задний') ? 'задний' : match[2].toLowerCase().includes('передний') ? 'передний' : match[2];
-            boxCar = match[3];
-        }
-    }
+    const marka = nameParts[0] ?? "—";
+    const modelRaw = nameParts[1] ?? "—";
+    
+    const yearMatch = item.NAME.match(/\b(19|20)\d{2}\b/);
+    const year: string | number = yearMatch ? yearMatch[0] : '';
+
+    const cardProps = item.CARD_DISPLAY_PROPERTY
+        ? item.CARD_DISPLAY_PROPERTY.split(",").map(s => s.trim())
+        : [];
+
+    const [
+        _engineVolume,
+        powerRaw,
+        mileageRaw,
+        boxCar = '',
+        driveUnit = '',
+    ] = cardProps;
+
+    const power = powerRaw
+        ? Number(powerRaw.replace(/[^\d]/g, ''))
+        : 0;
+
+    const mileage = mileageRaw
+        ? Number(mileageRaw.replace(/[^\d]/g, ''))
+        : 0;
 
     return {
         id: item.CREATED_BY + item.NAME,
@@ -48,18 +60,18 @@ export function mapTop100(item: Top100ApiItemRaw): CatalogCard {
         detailUrl: item.DETAIL_PAGE_URL ?? "#",
         created_by: item.CREATED_BY,
         time_job: item.TIME_JOB ?? null,
-        marka: marka ?? "—",
-        model: modelRaw ?? "—",
+
+        marka,
+        model: modelRaw,
         price: Number(item.PRICE) || 0,
         location: item.CITY ?? null,
         year,
-        power: 0,
-        mileage: 0,
+        power,
+        mileage,
         driveUnit,
         boxCar,
         pictures: ["/local/img/no-photo.png"],
         isClubService: false,
-        isPremium:!!item.PRODVIGENIE,
-
+        isPremium: !!item.PRODVIGENIE,
     };
 }

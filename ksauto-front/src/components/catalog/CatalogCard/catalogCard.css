@@ -1,0 +1,8 @@
+.catalog__premium-bg {
+    background-color: #E3F8E9;;
+}
+
+.catalog__items-block {
+    justify-content: space-between;
+    gap: 0;
+}
