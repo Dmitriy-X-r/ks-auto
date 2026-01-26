@@ -685,7 +685,7 @@
 }
 .geo-popup {
     top: calc(100% + 7px);
-    left: 0;
+    /* left: 0; */
     position: absolute;
     flex-direction: column;
 }

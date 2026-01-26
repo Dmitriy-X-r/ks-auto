@@ -194,6 +194,7 @@ export default function Header({ catalogsData }: HeaderProps) {
 
     // при ресайзе — если ушли с мобилки, снимаем scroll-no от каталога
     useEffect(() => {
+        console.log(catalogsData);
         const onResize = () => {
             if (!isMobile()) {
                 document.body.classList.remove("scroll-no");
