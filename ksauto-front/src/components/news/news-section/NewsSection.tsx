@@ -1,12 +1,33 @@
-// src/components/news/news-section/NewsSection.tsx
-import AdvertisingElement from '@/components/advertising-element/Advertising-element'
-import NewsElement from '@/components/news/news-element/NewsElement'
-import { getNews } from '@/lib/api/news'
-import { mapNews, NewsUIItem } from '@/lib/mappers/mapNews'
+"use client";
 
-export default async function NewsSection() {
-    const data = await getNews()
-    const news: NewsUIItem[] = data.result.map(mapNews)
+import { useEffect, useState } from "react";
+import AdvertisingElement from '@/components/advertising-element/Advertising-element';
+import NewsElement from '@/components/news/news-element/NewsElement';
+import { mapNews, NewsUIItem } from '@/lib/mappers/mapNews';
+
+export default function NewsSectionClient() {
+    const [news, setNews] = useState<NewsUIItem[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchNews = async () => {
+            try {
+                const res = await fetch('/api/news?page=1&pageSize=5');
+                const data = await res.json();
+                if (data.result) {
+                    setNews(data.result.map(mapNews));
+                }
+            } catch (e) {
+                console.error('Failed to fetch news:', e);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchNews();
+    }, []);
+
+    if (loading) return <div>Загрузка...</div>;
 
     return (
         <section className="section_main shadow new-container">
@@ -27,5 +48,5 @@ export default async function NewsSection() {
                 </div>
             </div>
         </section>
-    )
+    );
 }

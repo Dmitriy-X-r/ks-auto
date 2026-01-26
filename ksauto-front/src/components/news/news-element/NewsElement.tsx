@@ -6,6 +6,7 @@ interface Props {
 }
 
 export default function NewsElement({ item }: Props) {
+    console.log(item);
     return (
         <Link href={item.link} className="review_main-item">
             <div className="review_main-wrapper">

@@ -17,7 +17,7 @@ export function mapNews(item: NewsApiItemRaw): NewsUIItem {
         date: item.DATE_ACTIVE_FROM,
         views: Number(item.SHOW_COUNTER ?? 0),
         image: item.PREVIEW_PICTURE
-            ? `https://hblocks-test.ru${item.PREVIEW_PICTURE}`
+            ? `${process.env.NEXT_PUBLIC_MAIN_DOMAIN}${item.PREVIEW_PICTURE}`
             : '/images/placeholder.jpg',
         link: `/news/${item.CODE}`,
     }
