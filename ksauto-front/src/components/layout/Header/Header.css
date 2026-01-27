@@ -1,0 +1,9 @@
+.geo-popup-select{
+    background-color: #EEEDEC;
+    padding: 6px 34px;
+    font-size: 17px;
+    color: #353433;
+    border: none;
+    border-radius: 10px !important;
+    height: auto !important;
+}

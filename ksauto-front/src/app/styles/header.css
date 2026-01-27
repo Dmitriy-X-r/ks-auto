@@ -2212,11 +2212,6 @@ footer .copi * {
         width: auto;
     }
 
-    .catalog__items-picture,
-    .catalog__items,
-    .section-catalog__items {
-        width: 25.7vw;
-    }
     .catalog_sorting {
         margin-right: 4vw;
     }
@@ -2824,7 +2819,6 @@ footer .copi * {
 
 
     .banner-main {
-        margin-bottom: 40px;
         padding: 40px 0;
     }
 
