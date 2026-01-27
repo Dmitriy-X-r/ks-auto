@@ -10,10 +10,33 @@ export interface MainSectionResponse {
       title_url1_text: string;
       title_url2: string;
       title_url2_text: string;
-      count: string;       // число в строке
-      count_text: string;  // слово, например "предложений"
+      count: string;
+      count_text: string;
     };
-    // block2 и block3 пока не нужны
+
+    block2: {
+      title: string;
+      title_url1: string;
+      title_url1_text: string;
+      title_url1_img: string;
+
+      title_url2: string;
+      title_url2_text: string;
+      title_url2_img: string;
+
+      title_url3: string;
+      title_url3_text: string;
+      title_url3_img: string;
+
+      title_url4: string;
+      title_url4_text: string;
+      title_url4_img: string;
+    };
+
+    block3: {
+      list: Array<{ url: string; name: string }>;
+      all: string;
+    };
   };
 }
 
