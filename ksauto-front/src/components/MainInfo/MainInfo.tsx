@@ -1,13 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import './MainInfo.css'
-import { getMainSection } from "@/lib/api/mainSection";
-import { getInfoBeforeReport } from "@/lib/api/infoBeforeReport";
+import './MainInfo.css';
 import { isInfoBeforeReportError } from "@/lib/api/infoBeforeReport";
 import type { InfoBeforeReportSuccess } from "@/lib/api/infoBeforeReport";
 
-type Brand = { name: string; code: string }; // code пригодится для URL marka_{code}
 
 function declensionRu(n: number, one: string, few: string, many: string) {
     // супер-простой аналог Bitrix Declension для "предложение"
@@ -24,7 +21,6 @@ function formatNumber(n: number) {
 }
 
 export default function MainInfo() {
-    // ====== МОКИ (потом заменишь на API) ======
     const [offersCount, setOffersCount] = useState<number | null>(null);
     const [offersWord, setOffersWord] = useState<string>("предложений");
     const [offersUrl, setOffersUrl] = useState<string>();
@@ -37,45 +33,66 @@ export default function MainInfo() {
     const [costsView, setCostsView] = useState<CostsView>("form");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const popularBrandsMock: Brand[] = useMemo(
-        () => [
-            { name: "Lada (ВАЗ)", code: "lada" },
-            { name: "Toyota", code: "toyota" },
-            { name: "Kia", code: "kia" },
-            { name: "Volkswagen", code: "volkswagen" },
-            { name: "Hyundai", code: "hyundai" },
-            { name: "Nissan", code: "nissan" },
-            { name: "Renault", code: "renault" },
-            { name: "BMW", code: "bmw" },
-            { name: "Ford", code: "ford" },
-        ],
-        []
-    );
+    type CarTypeItem = { url: string; text: string; img: string };
+    type PopularBrandItem = { url: string; name: string };
 
-    // ====== popup "Скачать приложение" (PC версия) ======
+    const [carTypes, setCarTypes] = useState<CarTypeItem[]>([]);
+    const [popularBrands, setPopularBrands] = useState<PopularBrandItem[]>([]);
+    const [brandsAllUrl, setBrandsAllUrl] = useState<string>("/catalog/cars/?showfilter=Y");
+
     const [isAppPopupOpen, setAppPopupOpen] = useState(false);
     const [appPopupTab, setAppPopupTab] = useState<"iOS" | "Android">("iOS");
 
     useEffect(() => {
-        getMainSection()
-            .then(data => {
-            console.log("API data:", data);
-            const countStr = data.result.block1.count;
-            console.log("Count string:", countStr);
+        const fetchMainSection = async () => {
+            try {
+            const res = await fetch("/api/main-sections");
+            const data = await res.json();
 
-            const countNum = parseInt(countStr, 10) || 0;
+            const block1 = data?.result?.block1;
+            const block2 = data?.result?.block2;
+            const block3 = data?.result?.block3;
+
+            // ===== block1 =====
+            const countStr = block1?.count ?? "0";
+            const countNum = parseInt(String(countStr).replace(/\s/g, ""), 10) || 0; // "7 012" -> 7012
             setOffersCount(countNum);
 
-            const url = data.result.block1.title_url1;
-            setOffersUrl(url);
+            setOffersUrl(block1?.title_url1);
+            setOffersWord(block1?.count_text || "предложений");
 
-            setOffersWord(data.result.block1.count_text || "предложений");
-            })
-        .catch(() => {
+            // ===== block2 (Тип автомобиля) =====
+            const types: CarTypeItem[] = block2
+                ? [
+                    { url: block2.title_url1, text: block2.title_url1_text, img: block2.title_url1_img },
+                    { url: block2.title_url2, text: block2.title_url2_text, img: block2.title_url2_img },
+                    { url: block2.title_url3, text: block2.title_url3_text, img: block2.title_url3_img },
+                    { url: block2.title_url4, text: block2.title_url4_text, img: block2.title_url4_img },
+                ].filter((x) => x.url && x.text && x.img)
+                : [];
+
+            setCarTypes(types);
+
+            // ===== block3 (Популярные марки) =====
+            const brands: PopularBrandItem[] = Array.isArray(block3?.list) ? block3.list : [];
+            setPopularBrands(brands);
+
+            setBrandsAllUrl(block3?.all || "/catalog/cars/?showfilter=Y");
+            } catch (e) {
+            console.error("Failed to fetch main sections:", e);
+
             setOffersCount(0);
             setOffersWord("предложений");
-            });
-        }, []);
+            setOffersUrl("/catalog/cars/");
+
+            setCarTypes([]);
+            setPopularBrands([]);
+            setBrandsAllUrl("/catalog/cars/?showfilter=Y");
+            }
+        };
+
+        fetchMainSection();
+    }, []);
 
     useEffect(() => {
         // закрытие по Esc
@@ -146,38 +163,25 @@ export default function MainInfo() {
                     <div className="banner-catalog-type">
                         <h2>Тип автомобиля</h2>
                         <div className="banner-catalog-type-list">
-                            <a href="/catalog/cars/filter/type-is-new/apply/" className="banner-catalog-type-item">
-                                <img src="/img/img-type-1.png" alt="Новые" />
-                                <p>Новые</p>
-                            </a>
-
-                            <a href="/catalog/cars/filter/type-is-with_mileage/apply/" className="banner-catalog-type-item">
-                                <img src="/img/img-type-2.png" alt="С пробегом" />
-                                <p>С пробегом</p>
-                            </a>
-
-                            <a href="/catalog/cars/filter/order_use-is-y/apply/" className="banner-catalog-type-item">
-                                <img src="/img/img-type-3.png" alt="На заказ" />
-                                <p>На заказ</p>
-                            </a>
-
-                            <a href="/catalog/cars/filter/seller-is-11411/apply/" className="banner-catalog-type-item">
-                                <img src="/img/img-type-4.png" alt="От КС" />
-                                <p>От КС</p>
-                            </a>
+                            {carTypes.map((t) => (
+                                <a key={t.url} href={t.url} className="banner-catalog-type-item">
+                                <img src={t.img} alt={t.text} />
+                                <p>{t.text}</p>
+                                </a>
+                            ))}
                         </div>
                     </div>
 
                     <div className="banner-main-catalog-marks">
                         <h2>Популярные марки</h2>
                         <div>
-                            {popularBrandsMock.slice(0, 9).map((b) => (
-                                <a key={b.code} href={`/catalog/cars/marka_${b.code}/`} className="banner-main__items-list">
+                            {popularBrands.slice(0, 9).map((b) => (
+                                <a key={b.url} href={b.url.startsWith("/") ? b.url : `/${b.url}`} className="banner-main__items-list">
                                     {b.name}
                                 </a>
                             ))}
 
-                            <a className="banner-main-catalog-marks-all" href="/catalog/cars/?showfilter=Y">
+                            <a className="banner-main-catalog-marks-all" href={brandsAllUrl}>
                                 Смотреть все
                                 <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -237,10 +241,7 @@ export default function MainInfo() {
                         />
                     ) : null}
 
-                    {/* POPUP (PC) */}
-                    <div className={`main-app-popup${isAppPopupOpen ? " active" : ""}`} data-check-popup="true">
-                        {/* кликабельный фон (если в css есть overlay через псевдо — не мешает) */}
-
+                    <div className={`main-app-popup${isAppPopupOpen ? " active" : ""}`} data-check-popup="true">                
 
                         <div className="main-app-popup-close" onClick={() => setAppPopupOpen(false)} role="button" tabIndex={0}>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -322,27 +323,28 @@ export default function MainInfo() {
                                     e.preventDefault();
                                     setCarInfo(null);
 
-                                    getInfoBeforeReport(searchValue)
-                                    .then((data) => {
-                                        const result = data.result;
+                                    fetch(`/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
+                                        .then((res) => res.json())
+                                        .then((data) => {
+                                            const result = data.result;
 
-                                        if (isInfoBeforeReportError(result)) {
-                                        setCarInfo(null);
-                                        setErrorMessage(result.ERROR);
-                                        setCostsView("form");
-                                        return;
-                                        }
+                                            if (isInfoBeforeReportError(result)) {
+                                            setCarInfo(null);
+                                            setErrorMessage(result.ERROR);
+                                            setCostsView("form");
+                                            return;
+                                            }
 
-                                        if (!result) {
-                                        setCarInfo(null);
-                                        setErrorMessage("Автомобиль не найден");
-                                        setCostsView("no-result");
-                                        return;
-                                        }
+                                            if (!result) {
+                                            setCarInfo(null);
+                                            setErrorMessage("Автомобиль не найден");
+                                            setCostsView("no-result");
+                                            return;
+                                            }
 
-                                        setErrorMessage(null);
-                                        setCarInfo(result);
-                                        setCostsView("result");
+                                            setErrorMessage(null);
+                                            setCarInfo(result);
+                                            setCostsView("result");
                                     })
                                     .catch(() => {
                                         setCarInfo(null);
@@ -350,8 +352,9 @@ export default function MainInfo() {
                                         setCostsView("no-result");
                                     });
 
-                                    console.log(carInfo);
-                                    console.log(errorMessage);
+
+                                    // console.log(carInfo);
+                                    // console.log(errorMessage);
                                 }}
                             >
                                 <label>
