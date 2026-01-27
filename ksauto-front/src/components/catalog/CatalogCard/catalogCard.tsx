@@ -12,19 +12,19 @@ interface CatalogCardProps {
     model: string;
     price: number;
     pictures?: string[];
-    location?: string;
+    location?: string | null;
     year: number | string;
     power: number | string;
     mileage: number | string;
     driveUnit: string;
     boxCar: string;
-    phone_number?: string;
-    saler_name?: string;
-    time_job?: string;
+    phone_number?: string | null;
+    saler_name?: string | null;
+    time_job?: string | null;
     created_by: number | string;
     isClubService?: boolean;
     isPremium?: boolean;
-    clubServiceText?: string;
+    clubServiceText?: string | null;
   };
 }
 
