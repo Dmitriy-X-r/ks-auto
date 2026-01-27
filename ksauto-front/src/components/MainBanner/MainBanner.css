@@ -1,6 +1,10 @@
-.main-banner {
+.main-banner-container {
     max-width: 1180px;
     margin: 0 auto;
+}
+
+.main-banner {
+   
     display: block;
     width: 100%;
     aspect-ratio: 1180 / 300;
@@ -26,4 +30,16 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
+}
+
+@media (max-width: 1200px) { 
+    .main-banner-container {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 1000px) { 
+    .main-banner {
+        margin-top: 110px;
+    }
 }

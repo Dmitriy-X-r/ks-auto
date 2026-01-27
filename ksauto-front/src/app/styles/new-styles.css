@@ -5760,3 +5760,9 @@ body:has(.testSiteLabel){
 .premium-bg{
     background-color: green;
 }
+
+@media (max-width: 1000px) { 
+    .header-burger {
+        display: block;
+    }
+}

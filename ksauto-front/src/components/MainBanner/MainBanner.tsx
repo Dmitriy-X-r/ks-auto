@@ -37,7 +37,7 @@ export default function MainBanner({
     // но Яндекс его всё ещё понимает.
     // Если хочешь — можем заменить на meta / robots позже.
     if (noIndex) {
-        return <div>{banner}</div>;
+        return <div className='main-banner-container'>{banner}</div>;
     }
 
     return banner;
