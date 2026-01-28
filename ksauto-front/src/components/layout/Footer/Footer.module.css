@@ -1,0 +1,84 @@
+.footerWrap {
+    background: #353433;
+    color: #fff;
+    margin-top: 24px;
+}
+
+.footer {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 0.9fr;
+    gap: 20px;
+    padding: 28px 0;
+}
+
+.logo {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+.policy {
+    margin-top: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.policy a {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.9;
+}
+
+.policy a:hover {
+    opacity: 1;
+}
+
+.app {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.95;
+}
+
+.appIcon {
+    width: 28px;
+    height: 28px;
+    background: #fff;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.contactTitle {
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.phone {
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.copi {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 14px 0 22px;
+    display: grid;
+    gap: 6px;
+}
+
+.info {
+    margin: 0;
+    opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+    .footer {
+        grid-template-columns: 1fr;
+    }
+}

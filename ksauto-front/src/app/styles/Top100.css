@@ -1,0 +1,115 @@
+.mob-catalog__slider {
+    display: none;
+}
+.sale-title-block.premium
+{
+    padding-bottom: 36px;
+}
+.prem_add{
+    background: #E23737 !important;
+    color: #FFFFFF !important;
+    height: 28px;
+}
+.prem_add:hover{
+  opacity: 0.8;
+}
+.prem_add span{
+    font-size: 13px;
+}
+@media (max-width: 1000px) {
+    .catalog-new .mob-catalog__slider {
+        display: block !important;
+        height: 220px;
+    }
+    .catalog__items-picture-image-wrapper {
+        height: 220px !important;
+    }
+    .pc-catalog__slider {
+        display: none !important;
+    }
+    
+    .catalog-new .mob-catalog__items-picture {
+        margin-bottom: 0;
+    }
+}
+@media (max-width: 500px) {
+    .catalog__items .catalog__items-link {
+        grid-template-rows: auto 1fr !important;   
+    }
+}
+
+#catalog-slider .slick-slide {
+  float: none !important;
+}
+
+/* Swiper база */
+#catalog-slider.catalog-slider {
+  width: 100%;
+  margin-left: 0;
+}
+
+/* убираем margin у "слайда" — gap делает Swiper spaceBetween */
+
+/* чтобы карточка занимала всю ширину слайда */
+#catalog-slider .swiper-slide {
+  height: auto;
+  display: flex;          /* важно, если внутри карточка имеет max-height/растяжение */
+}
+
+#catalog-slider .swiper-slide > * {
+  width: 100%;
+}
+
+
+.catalog-premium .catalog__items {
+    max-height: 550px;
+}
+.catalog-premium {
+    margin-top: 72px;
+}
+
+#catalog-slider {
+  overflow: hidden; /* ✅ режет краешек 5-го */
+}
+
+/* На всякий: иногда темы/стили задают overflow visible */
+
+/* Но ключевое — контейнер слайдера должен скрывать */
+#catalog-slider.catalog-slider {
+  overflow: hidden;
+}
+
+/* Стабилизируем вычисление ширин */
+#catalog-slider,
+#catalog-slider * {
+  box-sizing: border-box;
+}
+
+#catalog-slider.catalog-slider {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+
+#catalog-slider {
+  width: 100%;
+  margin: 0 !important;
+  overflow: hidden; /* ✅ чтобы не было видно 5-й карточки */
+  box-sizing: border-box;
+}
+
+/* Внутренности — без "visible", пусть будет как у Swiper по умолчанию */
+#catalog-slider .swiper-wrapper {
+  box-sizing: border-box;
+}
+
+/* Слайды */
+#catalog-slider .swiper-slide {
+  height: auto;
+  display: flex;
+  box-sizing: border-box;
+}
+
+#catalog-slider .swiper-slide > * {
+  width: 100%;
+}

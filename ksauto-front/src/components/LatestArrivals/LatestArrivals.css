@@ -1,0 +1,97 @@
+.mob-catalog__slider {
+    display: none;
+}
+.catalog__list .slick-prev{
+	top: -17px;
+}
+
+catalog.catalog-new #catalog__list {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* УБИВАЕМ глобальную ширину 25.7vw */
+.catalog.catalog-new #catalog__list > .catalog__items {
+  width: auto !important;
+  min-width: 0 !important; /* чтобы контент не распирал колонку */
+}
+
+/* Картинка/обёртки — 100% ширины ячейки */
+.catalog.catalog-new #catalog__list .catalog__items-picture,
+.catalog.catalog-new #catalog__list .pc-catalog__slider,
+.catalog.catalog-new #catalog__list .mob-catalog__slider {
+  width: 100% !important;
+}
+
+/* На всякий случай: чтобы внутренний грид карточки не ломал ширину */
+.catalog.catalog-new #catalog__list .catalog__items-link,
+.catalog.catalog-new #catalog__list .catalog__items-block,
+.catalog.catalog-new #catalog__list .catalog__items-block-title {
+  min-width: 0;
+}
+
+#catalog__list > .catalog__review_main.catalog__items__adverting-element {
+  height: 100%;
+  min-height: 100%;
+  align-self: stretch;   /* ключевое */
+  display: flex;         /* чтобы центрировать контент */
+  flex-direction: column;
+  justify-content: center; /* ✅ весь контент по центру */
+  text-align: center;      /* по желанию, обычно так выглядит лучше */
+}
+
+/* 3) Чтобы “Разместить” не улетал вниз, если где-то было space-between */
+#catalog__list > .catalog__review_main.catalog__items__adverting-element .catalog__review_main-btn {
+  margin-top: 12px; /* аккуратный отступ */
+}
+
+/* 4) Если в старых стилях у .catalog__review_main был фиксированный height/ padding — добиваем */
+#catalog__list > .catalog__review_main.catalog__items__adverting-element {
+  box-sizing: border-box;
+}
+
+.load_more{
+    grid-column: 1 / 5;
+}
+
+/* Адаптив как в типовом каталоге */
+@media (max-width: 1400px) {
+  .catalog.catalog-new #catalog__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 992px) {
+  .catalog.catalog-new #catalog__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 576px) {
+  .catalog.catalog-new #catalog__list {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 1000px) {
+    .catalog-new .mob-catalog__slider {
+        display: block !important;
+        height: 220px;
+    }
+    .catalog__items-picture-image-wrapper {
+        height: 220px !important;
+    }
+    .pc-catalog__slider {
+        display: none !important;
+    }
+    
+    .catalog-new .mob-catalog__items-picture {
+        margin-bottom: 0;
+    }
+}
+@media (max-width: 500px) {
+    .catalog__items .catalog__items-link {
+        grid-template-rows: auto 1fr !important;   
+    }
+}

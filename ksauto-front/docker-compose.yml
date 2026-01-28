@@ -1,0 +1,19 @@
+services:
+  nextjs:
+    container_name: nextjs-app-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        API_DOMAIN: ${API_DOMAIN}
+        NEXT_PUBLIC_API_DOMAIN: ${NEXT_PUBLIC_API_DOMAIN}
+        API_BASIC_LOGIN: ${API_BASIC_LOGIN}
+        API_BASIC_PASSWORD: ${API_BASIC_PASSWORD}
+        NEXT_PUBLIC_MAIN_DOMAIN: ${NEXT_PUBLIC_MAIN_DOMAIN}
+    environment:
+      PORT: 5400
+    ports:
+      - "5400:5400"
+    restart: unless-stopped
+    env_file:
+      - .env

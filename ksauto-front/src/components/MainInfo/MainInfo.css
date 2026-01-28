@@ -1,0 +1,20 @@
+.link_btn {
+    font-family: "Inter-Regular";
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
+    /* border: none; */
+    padding: 12px 20px 12px 20px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.get-costs-error{
+    font-family: 'Inter-Regular';
+    font-size: 13px;
+    color: #E23737;
+    margin-bottom: 10px;
+}
