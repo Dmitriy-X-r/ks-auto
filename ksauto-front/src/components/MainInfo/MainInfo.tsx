@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import './MainInfo.css';
 import { isInfoBeforeReportError } from "@/lib/api/infoBeforeReport";
 import type { InfoBeforeReportSuccess } from "@/lib/api/infoBeforeReport";
+import { BASE_PATH } from "@/lib/basePath";
 
 
 function declensionRu(n: number, one: string, few: string, many: string) {
@@ -26,7 +27,7 @@ export default function MainInfo() {
     const [offersUrl, setOffersUrl] = useState<string>();
 
     const [searchValue, setSearchValue] = useState("");
-    
+
     const [carInfo, setCarInfo] = useState<InfoBeforeReportSuccess | null>(null);
     type CostsView = "form" | "result" | "no-result";
 
@@ -46,48 +47,48 @@ export default function MainInfo() {
     useEffect(() => {
         const fetchMainSection = async () => {
             try {
-            const res = await fetch("/api/main-sections");
-            const data = await res.json();
+                const res = await fetch(`${BASE_PATH}/api/main-sections`);
+                const data = await res.json();
 
-            const block1 = data?.result?.block1;
-            const block2 = data?.result?.block2;
-            const block3 = data?.result?.block3;
+                const block1 = data?.result?.block1;
+                const block2 = data?.result?.block2;
+                const block3 = data?.result?.block3;
 
-            // ===== block1 =====
-            const countStr = block1?.count ?? "0";
-            const countNum = parseInt(String(countStr).replace(/\s/g, ""), 10) || 0; // "7 012" -> 7012
-            setOffersCount(countNum);
+                // ===== block1 =====
+                const countStr = block1?.count ?? "0";
+                const countNum = parseInt(String(countStr).replace(/\s/g, ""), 10) || 0; // "7 012" -> 7012
+                setOffersCount(countNum);
 
-            setOffersUrl(block1?.title_url1);
-            setOffersWord(block1?.count_text || "предложений");
+                setOffersUrl(block1?.title_url1);
+                setOffersWord(block1?.count_text || "предложений");
 
-            // ===== block2 (Тип автомобиля) =====
-            const types: CarTypeItem[] = block2
-                ? [
-                    { url: block2.title_url1, text: block2.title_url1_text, img: block2.title_url1_img },
-                    { url: block2.title_url2, text: block2.title_url2_text, img: block2.title_url2_img },
-                    { url: block2.title_url3, text: block2.title_url3_text, img: block2.title_url3_img },
-                    { url: block2.title_url4, text: block2.title_url4_text, img: block2.title_url4_img },
-                ].filter((x) => x.url && x.text && x.img)
-                : [];
+                // ===== block2 (Тип автомобиля) =====
+                const types: CarTypeItem[] = block2
+                    ? [
+                        { url: block2.title_url1, text: block2.title_url1_text, img: block2.title_url1_img },
+                        { url: block2.title_url2, text: block2.title_url2_text, img: block2.title_url2_img },
+                        { url: block2.title_url3, text: block2.title_url3_text, img: block2.title_url3_img },
+                        { url: block2.title_url4, text: block2.title_url4_text, img: block2.title_url4_img },
+                    ].filter((x) => x.url && x.text && x.img)
+                    : [];
 
-            setCarTypes(types);
+                setCarTypes(types);
 
-            // ===== block3 (Популярные марки) =====
-            const brands: PopularBrandItem[] = Array.isArray(block3?.list) ? block3.list : [];
-            setPopularBrands(brands);
+                // ===== block3 (Популярные марки) =====
+                const brands: PopularBrandItem[] = Array.isArray(block3?.list) ? block3.list : [];
+                setPopularBrands(brands);
 
-            setBrandsAllUrl(block3?.all || "/catalog/cars/?showfilter=Y");
+                setBrandsAllUrl(block3?.all || "/catalog/cars/?showfilter=Y");
             } catch (e) {
-            console.error("Failed to fetch main sections:", e);
+                console.error("Failed to fetch main sections:", e);
 
-            setOffersCount(0);
-            setOffersWord("предложений");
-            setOffersUrl("/catalog/cars/");
+                setOffersCount(0);
+                setOffersWord("предложений");
+                setOffersUrl("/catalog/cars/");
 
-            setCarTypes([]);
-            setPopularBrands([]);
-            setBrandsAllUrl("/catalog/cars/?showfilter=Y");
+                setCarTypes([]);
+                setPopularBrands([]);
+                setBrandsAllUrl("/catalog/cars/?showfilter=Y");
             }
         };
 
@@ -146,7 +147,7 @@ export default function MainInfo() {
                     >
                         {offersCount !== null && (
                             <>
-                            Показать {formatNumber(offersCount)} {offersWord}
+                                Показать {formatNumber(offersCount)} {offersWord}
                             </>
                         )}
                     </a>
@@ -165,8 +166,8 @@ export default function MainInfo() {
                         <div className="banner-catalog-type-list">
                             {carTypes.map((t) => (
                                 <a key={t.url} href={t.url} className="banner-catalog-type-item">
-                                <img src={t.img} alt={t.text} />
-                                <p>{t.text}</p>
+                                    <img src={t.img} alt={t.text} />
+                                    <p>{t.text}</p>
                                 </a>
                             ))}
                         </div>
@@ -241,7 +242,7 @@ export default function MainInfo() {
                         />
                     ) : null}
 
-                    <div className={`main-app-popup${isAppPopupOpen ? " active" : ""}`} data-check-popup="true">                
+                    <div className={`main-app-popup${isAppPopupOpen ? " active" : ""}`} data-check-popup="true">
 
                         <div className="main-app-popup-close" onClick={() => setAppPopupOpen(false)} role="button" tabIndex={0}>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -301,16 +302,16 @@ export default function MainInfo() {
 
                 {/* ===== get-costs ===== */}
                 <div className="get-costs" data-action="get-report">
-                     {costsView === "form" && (
+                    {costsView === "form" && (
                         <div className="get-costs-wrapper">
                             <p className="get-costs-title">
                                 Проверьте любой автомобиль перед покупкой <span className="error"></span>
                             </p>
-                            
+
                             {errorMessage && (
-                            <p className="get-costs-error">
-                                {errorMessage}
-                            </p>
+                                <p className="get-costs-error">
+                                    {errorMessage}
+                                </p>
                             )}
                             <p className="get-costs-subtitle">
                                 Ограничения, штрафы, возможные владельцы, участие в ДТП и многое другое
@@ -323,34 +324,34 @@ export default function MainInfo() {
                                     e.preventDefault();
                                     setCarInfo(null);
 
-                                    fetch(`/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
+                                    fetch(`${BASE_PATH}/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
                                         .then((res) => res.json())
                                         .then((data) => {
                                             const result = data.result;
 
                                             if (isInfoBeforeReportError(result)) {
-                                            setCarInfo(null);
-                                            setErrorMessage(result.ERROR);
-                                            setCostsView("form");
-                                            return;
+                                                setCarInfo(null);
+                                                setErrorMessage(result.ERROR);
+                                                setCostsView("form");
+                                                return;
                                             }
 
                                             if (!result) {
-                                            setCarInfo(null);
-                                            setErrorMessage("Автомобиль не найден");
-                                            setCostsView("no-result");
-                                            return;
+                                                setCarInfo(null);
+                                                setErrorMessage("Автомобиль не найден");
+                                                setCostsView("no-result");
+                                                return;
                                             }
 
                                             setErrorMessage(null);
                                             setCarInfo(result);
                                             setCostsView("result");
-                                    })
-                                    .catch(() => {
-                                        setCarInfo(null);
-                                        setErrorMessage("Ошибка сервера. Попробуйте позже");
-                                        setCostsView("no-result");
-                                    });
+                                        })
+                                        .catch(() => {
+                                            setCarInfo(null);
+                                            setErrorMessage("Ошибка сервера. Попробуйте позже");
+                                            setCostsView("no-result");
+                                        });
 
 
                                     // console.log(carInfo);
@@ -365,7 +366,7 @@ export default function MainInfo() {
                                 </button>
                             </form>
                         </div>
-                     )}
+                    )}
 
                     {/* Эти блоки на старом сайте показывались/прятались скриптами.
                         Пока оставляем в DOM как в PHP (стили сами разрулят display), а потом подключим логику. */}
@@ -387,7 +388,7 @@ export default function MainInfo() {
                                         {carInfo.marka} {carInfo.model}
                                     </p>
                                     <div className="costs-result-item-tabs">
-                                         {carInfo.year ? <span>{carInfo.year} г.</span> : null}
+                                        {carInfo.year ? <span>{carInfo.year} г.</span> : null}
                                         {carInfo.power ? <span>{Math.round(carInfo.power)} л.с.</span> : null}
                                     </div>
                                     <p className="costs-result-item-price"></p>

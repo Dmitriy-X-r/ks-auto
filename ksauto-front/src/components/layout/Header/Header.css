@@ -7,3 +7,19 @@
     border-radius: 10px !important;
     height: auto !important;
 }
+
+.header-burger-menu-item .burger-link {
+    display: flex;
+    align-items: center;
+    gap: 6%;
+    padding-left: 0;
+}
+
+.burger-link__icon {
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  flex: 0 0 20px;
+}

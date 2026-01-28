@@ -1491,9 +1491,6 @@ footer .footer-copi .footer-block__cop .footer-block__info {
     .catalog__review_main.catalog_mob_review img{
         max-width: 400px;
     }
-    .catalog__items-picture-image {
-        min-height: 50vw;
-    }
 }
 
 @media (max-width: 768px) {
@@ -2977,8 +2974,8 @@ footer .copi * {
         margin-left: 0;
     }
 
-    .catalog__items-picture,
-    .catalog__items,
+    /* .catalog__items-picture, */
+    /* .catalog__items, */
     .catalog__review_main,
     .section-catalog__items {
         max-width: 440px;

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import './Header.css';
+import { BASE_PATH } from "@/lib/basePath";
 
-type MenuItem = { href: string; label: string };
+type MenuItem = { href: string; label: string; icon?: string };
 
 type CatalogChild = { href: string; label: string; picture?: string }
 
@@ -16,7 +17,7 @@ type CatalogItem = {
 
     hidden?: boolean
     isBigImg?: boolean
-    
+
     childsTitle?: string
     childs?: CatalogChild[]
 }
@@ -71,15 +72,15 @@ export default function Header({ catalogsData }: HeaderProps) {
         []
     );
     // СТАТИКА: меню в бургере (как bitrix:menu header-burger-menu)
-     const burgerMenu: MenuItem[] = useMemo(
+    const burgerMenu: MenuItem[] = useMemo(
         () => [
-            { href: "/shares/", label: "Новости" },
-            { href: "/trade-in/", label: "Trade-in" },
-            { href: "/autocredit/", label: "Дисконтные карты" },
-            { href: "/repair/", label: "Допоборудование и сервис" },
-            { href: "/company/", label: "О компании" },
-            { href: "/contacts/", label: "Контакты" },
-            { href: "/contacts/", label: "Акции портала" },
+            { href: "/news/", label: "Новости", icon: "/local/img/news.png" },
+            { href: "/trade-in/", label: "Trade-in", icon: "/local/img/arrow-rounded.png" },
+            { href: "/autocredit/", label: "Дисконтные карты", icon: "/local/templates/new/img/discount_icon.png" },
+            { href: "/repair/", label: "Допоборудование и сервис", icon: "/local/img/gear.png" },
+            { href: "/company/", label: "О компании", icon: "/local/img/informationmark-circle.png" },
+            { href: "/contacts/", label: "Контакты", icon: "/local/img/phone.png" },
+            { href: "/contacts/", label: "Акции портала", icon: "/local/templates/new/img/party-popper.png" },
         ],
         []
     );
@@ -108,7 +109,7 @@ export default function Header({ catalogsData }: HeaderProps) {
         });
     };
 
-    
+
 
     useEffect(() => {
         const saved = typeof window !== "undefined" ? localStorage.getItem("city") : null;
@@ -119,7 +120,7 @@ export default function Header({ catalogsData }: HeaderProps) {
         if (cities.length || citiesLoading) return;
         setCitiesLoading(true);
         try {
-            const res = await fetch("/api/cities", { cache: "no-store" });
+            const res = await fetch(`${BASE_PATH}/api/cities`, { cache: "no-store" });
             const data = (await res.json()) as { result: string[] };
             setCities(Array.isArray(data.result) ? data.result : []);
         } finally {
@@ -331,8 +332,9 @@ export default function Header({ catalogsData }: HeaderProps) {
                             <div className="header-burger-menu">
                                 <ul className="menu header__menu">
                                     {burgerMenu.map((item, idx) => (
-                                         <li key={`${item.href}-${idx}`} className="header-burger-menu-item">
-                                            <Link className="menu__item-sub menu__item" href={item.href} onClick={() => setBurgerOpen(false)}>
+                                        <li key={`${item.href}-${idx}`} className="header-burger-menu-item">
+                                            <Link className="menu__item-sub menu__item burger-link" href={item.href} onClick={() => setBurgerOpen(false)}>
+                                                {item.icon ? <span className="burger-link__icon" style={{ backgroundImage: `url(${item.icon})` }} /> : null}
                                                 {item.label}
                                             </Link>
                                         </li>
@@ -576,221 +578,220 @@ export default function Header({ catalogsData }: HeaderProps) {
                 </div>
 
                 {/* GEO POPUP desktop */}
-                <div  className={`geo-popup${isGeoOpen ? " show" : ""}${geoMode === "auto" ? " show-auto" : " show-handmade"} new-container`} id="geo-popup">
+                <div className={`geo-popup${isGeoOpen ? " show" : ""}${geoMode === "auto" ? " show-auto" : " show-handmade"} new-container`} id="geo-popup">
                     <div className="geo-popup-bg" onClick={() => { setGeoOpen(false); setGeoMode("auto"); }} />
 
                     {/* HANDMADE (ВЫБОР ГОРОДА) */}
                     <div className={`geo-popup-body geo-popup-body-handmade${geoMode === "handmade" ? " show" : ""}`}>
                         <div className="geo-popup-close" onClick={() => { setGeoOpen(false); setGeoMode("auto"); }} role="button" tabIndex={0}>
-                        <img src="/local/img/close.png" alt="" />
+                            <img src="/local/img/close.png" alt="" />
                         </div>
 
                         <div className="geo-popup-title">Введите ваш город</div>
 
                         <label className="get-costs-city ads-info__items">
-                        <select
-                            className="js-example-basic-multiple js-states form-control js__region_select3 geo-popup-select"
-                            value={cityDraft}
-                            onChange={(e) => setCityDraft(e.target.value)}
-                        >
-                            <option value="">Введите город</option>
-                            {cities.map((c, idx) => (
-                            <option key={`${c}-${idx}`} value={c}>{c}</option>
-                            ))}
-                        </select>
+                            <select
+                                className="js-example-basic-multiple js-states form-control js__region_select3 geo-popup-select"
+                                value={cityDraft}
+                                onChange={(e) => setCityDraft(e.target.value)}
+                            >
+                                <option value="">Введите город</option>
+                                {cities.map((c, idx) => (
+                                    <option key={`${c}-${idx}`} value={c}>{c}</option>
+                                ))}
+                            </select>
 
-                        <input type="hidden" name="ADS_REGION" value="" />
-                        <input type="hidden" name="ADS_CITY" value={cityDraft} />
+                            <input type="hidden" name="ADS_REGION" value="" />
+                            <input type="hidden" name="ADS_CITY" value={cityDraft} />
                         </label>
 
                         <div
-                        className="geo-popup-save"
-                        onClick={() => {
-                            const city = cityDraft || selectedCity;
-                            if (city) {
-                            setSelectedCity(city);
-                            localStorage.setItem("city", city);
-                            }
-                            setGeoOpen(false);
-                            setGeoMode("auto");
-                        }}
+                            className="geo-popup-save"
+                            onClick={() => {
+                                const city = cityDraft || selectedCity;
+                                if (city) {
+                                    setSelectedCity(city);
+                                    localStorage.setItem("city", city);
+                                }
+                                setGeoOpen(false);
+                                setGeoMode("auto");
+                            }}
                         >
-                        Сохранить
+                            Сохранить
                         </div>
 
                         <div
-                        className="geo-popup-auto"
-                        onClick={() => {
-                            // “Определить автоматически”
-                            setSelectedCity(detectedCity);
-                            localStorage.setItem("city", detectedCity);
-                            setGeoOpen(false);
-                            setGeoMode("auto");
-                        }}
+                            className="geo-popup-auto"
+                            onClick={() => {
+                                // “Определить автоматически”
+                                setSelectedCity(detectedCity);
+                                localStorage.setItem("city", detectedCity);
+                                setGeoOpen(false);
+                                setGeoMode("auto");
+                            }}
                         >
-                        Определить автоматически
+                            Определить автоматически
                         </div>
                     </div>
 
                     {/* AUTO (ВАШ ГОРОД?) */}
                     <div className={`geo-popup-body geo-popup-body-auto${geoMode === "auto" ? " show" : ""}`}>
                         <div className="geo-popup-close" onClick={() => { setGeoOpen(false); setGeoMode("auto"); }} role="button" tabIndex={0}>
-                        <img src="/local/img/close.png" alt="" />
+                            <img src="/local/img/close.png" alt="" />
                         </div>
 
                         <div className="geo-popup-title">Ваш город {detectedCity}?</div>
                         <p className="geo-popup-subtitle">Укажите город, чтобы увидеть ближайшие объявления</p>
 
                         <div
-                        className="geo-popup-save"
-                        onClick={() => {
-                            setSelectedCity(detectedCity);
-                            localStorage.setItem("city", detectedCity);
-                            setGeoOpen(false);
-                            setGeoMode("auto");
-                        }}
+                            className="geo-popup-save"
+                            onClick={() => {
+                                setSelectedCity(detectedCity);
+                                localStorage.setItem("city", detectedCity);
+                                setGeoOpen(false);
+                                setGeoMode("auto");
+                            }}
                         >
-                        Все верно
+                            Все верно
                         </div>
 
                         <div
-                        className="geo-popup-auto"
-                        onClick={async () => {
-                            await ensureCitiesLoaded();
-                            setCityDraft(selectedCity === "Любой город" ? "" : selectedCity);
-                            setGeoMode("handmade");
-                        }}
+                            className="geo-popup-auto"
+                            onClick={async () => {
+                                await ensureCitiesLoaded();
+                                setCityDraft(selectedCity === "Любой город" ? "" : selectedCity);
+                                setGeoMode("handmade");
+                            }}
                         >
-                        Нет, сменить
+                            Нет, сменить
                         </div>
 
                         {geoMode === "auto" && citiesLoading ? (
-                        <div style={{ marginTop: 10, opacity: 0.7, fontSize: 13 }}>Загружаю список городов…</div>
+                            <div style={{ marginTop: 10, opacity: 0.7, fontSize: 13 }}>Загружаю список городов…</div>
                         ) : null}
                     </div>
                 </div>
 
-               {/* GEO POPUP mobile */}
+                {/* GEO POPUP mobile */}
                 <div
-                className={`geo-popup-mob geo-popup${isGeoMobOpen ? " show" : ""}${
-                    geoMobMode === "auto" ? " show-auto" : " show-handmade"
-                }`}
+                    className={`geo-popup-mob geo-popup${isGeoMobOpen ? " show" : ""}${geoMobMode === "auto" ? " show-auto" : " show-handmade"
+                        }`}
                     id="geo-popup-mob"
-                    >
+                >
                     <div
                         className="geo-popup-bg"
                         onClick={() => {
-                        setGeoMobOpen(false);
-                        setGeoMobMode("auto");
+                            setGeoMobOpen(false);
+                            setGeoMobMode("auto");
                         }}
                     />
 
                     {/* HANDMADE (ВЫБОР ГОРОДА) */}
                     <div className={`geo-popup-body geo-popup-body-handmade${geoMobMode === "handmade" ? " show" : ""}`}>
                         <div
-                        className="geo-popup-close"
-                        onClick={() => {
-                            setGeoMobOpen(false);
-                            setGeoMobMode("auto");
-                        }}
-                        role="button"
-                        tabIndex={0}
+                            className="geo-popup-close"
+                            onClick={() => {
+                                setGeoMobOpen(false);
+                                setGeoMobMode("auto");
+                            }}
+                            role="button"
+                            tabIndex={0}
                         >
-                        <img src="/local/img/close.png" alt="" />
+                            <img src="/local/img/close.png" alt="" />
                         </div>
 
                         <div className="geo-popup-title">Введите ваш город</div>
 
                         <label className="get-costs-city ads-info__items">
-                        <select
-                            className="js-example-basic-multiple js-states form-control js__region_select3"
-                            value={cityDraft}
-                            onChange={(e) => setCityDraft(e.target.value)}
-                        >
-                            <option value=""></option>
-                            {cities.map((c, idx) => (
-                            <option key={`${c}-${idx}`} value={c}>
-                                {c}
-                            </option>
-                            ))}
-                        </select>
+                            <select
+                                className="js-example-basic-multiple js-states form-control js__region_select3"
+                                value={cityDraft}
+                                onChange={(e) => setCityDraft(e.target.value)}
+                            >
+                                <option value=""></option>
+                                {cities.map((c, idx) => (
+                                    <option key={`${c}-${idx}`} value={c}>
+                                        {c}
+                                    </option>
+                                ))}
+                            </select>
 
-                        <input type="hidden" name="ADS_REGION" value="" />
-                        <input type="hidden" name="ADS_CITY" value={cityDraft} />
+                            <input type="hidden" name="ADS_REGION" value="" />
+                            <input type="hidden" name="ADS_CITY" value={cityDraft} />
                         </label>
 
                         <div
-                        className="geo-popup-save"
-                        onClick={() => {
-                            const city = cityDraft || selectedCity;
-                            if (city) {
-                            setSelectedCity(city);
-                            localStorage.setItem("city", city);
-                            }
-                            setGeoMobOpen(false);
-                            setGeoMobMode("auto");
-                        }}
+                            className="geo-popup-save"
+                            onClick={() => {
+                                const city = cityDraft || selectedCity;
+                                if (city) {
+                                    setSelectedCity(city);
+                                    localStorage.setItem("city", city);
+                                }
+                                setGeoMobOpen(false);
+                                setGeoMobMode("auto");
+                            }}
                         >
-                        Сохранить
+                            Сохранить
                         </div>
 
                         <div
-                        className="geo-popup-auto"
-                        onClick={() => {
-                            setSelectedCity(detectedCity);
-                            localStorage.setItem("city", detectedCity);
-                            setGeoMobOpen(false);
-                            setGeoMobMode("auto");
-                        }}
+                            className="geo-popup-auto"
+                            onClick={() => {
+                                setSelectedCity(detectedCity);
+                                localStorage.setItem("city", detectedCity);
+                                setGeoMobOpen(false);
+                                setGeoMobMode("auto");
+                            }}
                         >
-                        Определить автоматически
-                    </div>
-                </div>
-
-                {/* AUTO (ВАШ ГОРОД?) */}
-                <div className={`geo-popup-body geo-popup-body-auto${geoMobMode === "auto" ? " show" : ""}`}>
-                    <div
-                    className="geo-popup-close"
-                    onClick={() => {
-                        setGeoMobOpen(false);
-                        setGeoMobMode("auto");
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    >
-                    <img src="/local/img/close.png" alt="" />
+                            Определить автоматически
+                        </div>
                     </div>
 
-                    <div className="geo-popup-title">Ваш город {detectedCity}?</div>
-                    <p className="geo-popup-subtitle">Укажите город, чтобы увидеть ближайшие объявления</p>
+                    {/* AUTO (ВАШ ГОРОД?) */}
+                    <div className={`geo-popup-body geo-popup-body-auto${geoMobMode === "auto" ? " show" : ""}`}>
+                        <div
+                            className="geo-popup-close"
+                            onClick={() => {
+                                setGeoMobOpen(false);
+                                setGeoMobMode("auto");
+                            }}
+                            role="button"
+                            tabIndex={0}
+                        >
+                            <img src="/local/img/close.png" alt="" />
+                        </div>
 
-                    <div
-                    className="geo-popup-save"
-                    onClick={() => {
-                        setSelectedCity(detectedCity);
-                        localStorage.setItem("city", detectedCity);
-                        setGeoMobOpen(false);
-                        setGeoMobMode("auto");
-                    }}
-                    >
-                    Все верно
+                        <div className="geo-popup-title">Ваш город {detectedCity}?</div>
+                        <p className="geo-popup-subtitle">Укажите город, чтобы увидеть ближайшие объявления</p>
+
+                        <div
+                            className="geo-popup-save"
+                            onClick={() => {
+                                setSelectedCity(detectedCity);
+                                localStorage.setItem("city", detectedCity);
+                                setGeoMobOpen(false);
+                                setGeoMobMode("auto");
+                            }}
+                        >
+                            Все верно
+                        </div>
+
+                        <div
+                            className="geo-popup-auto"
+                            onClick={async () => {
+                                await ensureCitiesLoaded();
+                                setCityDraft(selectedCity === "Любой город" ? "" : selectedCity);
+                                setGeoMobMode("handmade");
+                            }}
+                        >
+                            Нет, сменить
+                        </div>
+
+                        {geoMobMode === "auto" && citiesLoading ? (
+                            <div style={{ marginTop: 10, opacity: 0.7, fontSize: 13 }}>Загружаю список городов…</div>
+                        ) : null}
                     </div>
-
-                    <div
-                    className="geo-popup-auto"
-                    onClick={async () => {
-                        await ensureCitiesLoaded();
-                        setCityDraft(selectedCity === "Любой город" ? "" : selectedCity);
-                        setGeoMobMode("handmade");
-                    }}
-                    >
-                    Нет, сменить
-                    </div>
-
-                    {geoMobMode === "auto" && citiesLoading ? (
-                    <div style={{ marginTop: 10, opacity: 0.7, fontSize: 13 }}>Загружаю список городов…</div>
-                    ) : null}
-                </div>
                 </div>
             </header>
 

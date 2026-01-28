@@ -5,24 +5,44 @@
 	top: -17px;
 }
 
-catalog.catalog-new #catalog__list {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+.catalog.catalog-new #catalog__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   align-items: stretch;
 }
 
-/* УБИВАЕМ глобальную ширину 25.7vw */
-.catalog.catalog-new #catalog__list > .catalog__items {
-  width: auto !important;
-  min-width: 0 !important; /* чтобы контент не распирал колонку */
+@media (max-width: 1150px) {
+  .catalog.catalog-new #catalog__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
+
+@media (max-width: 990px) {
+  .catalog.catalog-new #catalog__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .catalog.catalog-new #catalog__list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* УБИВАЕМ глобальную ширину 25.7vw */
+/* .catalog.catalog-new #catalog__list > .catalog__items {
+  width: auto !important;
+  min-width: 0 !important; 
+} */
 
 /* Картинка/обёртки — 100% ширины ячейки */
 .catalog.catalog-new #catalog__list .catalog__items-picture,
 .catalog.catalog-new #catalog__list .pc-catalog__slider,
 .catalog.catalog-new #catalog__list .mob-catalog__slider {
   width: 100% !important;
+  height: 100%;
+  max-height: fit-content;
 }
 
 /* На всякий случай: чтобы внутренний грид карточки не ломал ширину */
@@ -53,7 +73,7 @@ catalog.catalog-new #catalog__list {
 }
 
 .load_more{
-    grid-column: 1 / 5;
+    grid-column: 1 / -1;
 }
 
 /* Адаптив как в типовом каталоге */
@@ -74,8 +94,20 @@ catalog.catalog-new #catalog__list {
         margin-bottom: 0;
     }
 }
-@media (max-width: 500px) {
+
+@media (max-width: 650px) {
+    .catalog__items__adverting-element {
+        min-width: 100%;
+        height: auto;
+    }
+
+    .catalog__items .catalog__items-link {
+        grid-template-rows: 300px 1fr;
+    }
+}
+
+/* @media (max-width: 500px) {
     .catalog__items .catalog__items-link {
         grid-template-rows: auto 1fr !important;   
     }
-}
+} */
