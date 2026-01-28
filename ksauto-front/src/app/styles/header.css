@@ -1491,9 +1491,6 @@ footer .footer-copi .footer-block__cop .footer-block__info {
     .catalog__review_main.catalog_mob_review img{
         max-width: 400px;
     }
-    .catalog__items-picture-image {
-        min-height: 50vw;
-    }
 }
 
 @media (max-width: 768px) {
@@ -2212,11 +2209,6 @@ footer .copi * {
         width: auto;
     }
 
-    .catalog__items-picture,
-    .catalog__items,
-    .section-catalog__items {
-        width: 25.7vw;
-    }
     .catalog_sorting {
         margin-right: 4vw;
     }
@@ -2824,7 +2816,6 @@ footer .copi * {
 
 
     .banner-main {
-        margin-bottom: 40px;
         padding: 40px 0;
     }
 
@@ -2983,8 +2974,8 @@ footer .copi * {
         margin-left: 0;
     }
 
-    .catalog__items-picture,
-    .catalog__items,
+    /* .catalog__items-picture, */
+    /* .catalog__items, */
     .catalog__review_main,
     .section-catalog__items {
         max-width: 440px;
