@@ -20,8 +20,8 @@ export function CardImagesSlider({ pictures, alt, baseUrl = "" }: Props) {
   const lastMoveAtRef = useRef(0);   // анти-дребезг
 
   // чувствительность: сколько пикселей нужно, чтобы сдвинуть на 1 слайд
-  const PX_PER_SLIDE = 25;           // 12–25 обычно норм
-  const MIN_INTERVAL = 150;           // мс, чтобы не молотило слишком часто
+  const PX_PER_SLIDE = 50;           // 12–25 обычно норм
+  const MIN_INTERVAL = 200;           // мс, чтобы не молотило слишком часто
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const swiper = swiperRef.current;

@@ -1,8 +1,9 @@
 'use client';
 import { ContactButton } from "@/components/catalog/ContactButton/ContactButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./catalogCard.css";
 import { CardImagesSlider } from "./CardImagesSlider";
+import { CardImagesSliderMobile } from "./CardImagesSliderMobile";
 
 interface CatalogCardProps {
   item: {
@@ -29,6 +30,21 @@ interface CatalogCardProps {
 }
 
 export function CatalogCard({ item }: CatalogCardProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 1150); // если ширина экрана меньше 1150px
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile); // обновляем состояние при изменении размера окна
+
+    return () => {
+      window.removeEventListener("resize", checkIsMobile);
+    };
+  }, []);
+
   const BASE_URL = "https://dev.ks-auto.ru";
 
   const [isFav, setFav] = useState(false);
@@ -57,19 +73,23 @@ export function CatalogCard({ item }: CatalogCardProps) {
             </div>
           )}
           {item.clubServiceText && (
-              <p className="sale_list__check catalog__items-check">
-                {item.clubServiceText}
-              </p>
+            <p className="sale_list__check catalog__items-check">
+              {item.clubServiceText}
+            </p>
           )}
         </div>
 
         <a href={item.detailUrl}>
           <div className="catalog__items-picture">
-            <CardImagesSlider
-              pictures={pictures}
-              baseUrl={BASE_URL}
-              alt={`${item.marka} ${item.model}`}
-            />
+            {isMobile ? (
+              <CardImagesSliderMobile pictures={pictures} baseUrl={BASE_URL} alt={`${item.marka} ${item.model}`} />
+            ) : (
+              <CardImagesSlider
+                pictures={pictures}
+                baseUrl={BASE_URL}
+                alt={`${item.marka} ${item.model}`}
+              />
+            )}
           </div>
         </a>
 
