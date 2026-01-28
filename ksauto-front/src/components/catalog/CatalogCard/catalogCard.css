@@ -31,3 +31,11 @@
 
 .card-images-slider { cursor: ew-resize; }
 .catalog__items-picture-image { pointer-events: none; }
+
+
+
+@media (max-width: 500px) { 
+    .catalog__items-block {
+        gap: 16px;
+    }
+}
