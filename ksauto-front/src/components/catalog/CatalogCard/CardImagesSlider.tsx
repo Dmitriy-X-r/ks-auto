@@ -85,7 +85,6 @@ export function CardImagesSlider({ pictures, alt, baseUrl = "" }: Props) {
               className="catalog__items-picture-image"
               src={`${baseUrl}${src}`}
               alt={alt}
-              loading="lazy"
               draggable={false}
             />
           </SwiperSlide>

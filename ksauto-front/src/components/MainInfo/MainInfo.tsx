@@ -47,7 +47,7 @@ export default function MainInfo() {
     useEffect(() => {
         const fetchMainSection = async () => {
             try {
-                const res = await fetch(`${BASE_PATH}/api/main-sections`);
+                const res = await fetch(`/next_main/api/main-sections`);
                 const data = await res.json();
 
                 const block1 = data?.result?.block1;
@@ -324,7 +324,7 @@ export default function MainInfo() {
                                     e.preventDefault();
                                     setCarInfo(null);
 
-                                    fetch(`${BASE_PATH}/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
+                                    fetch(`/next_main/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
                                         .then((res) => res.json())
                                         .then((data) => {
                                             const result = data.result;

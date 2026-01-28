@@ -7,7 +7,7 @@ interface Props {
 
 export default function NewsElement({ item }: Props) {
     return (
-        <Link href={item.link} className="review_main-item">
+        <Link href={item.link.endsWith('/') ? item.link : `${item.link}/`} className="review_main-item">
             <div className="review_main-wrapper">
                 <img
                     className="review_main-img"

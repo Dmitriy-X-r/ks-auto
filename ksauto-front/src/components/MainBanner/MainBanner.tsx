@@ -15,7 +15,7 @@ export default function MainBanner({
     target = "_blank",
     noIndex = false,
     comment,
-    imageSrc = "/local/img/main-banner.png",
+    imageSrc = "/img/main-banner.png",
     imageAlt = "",
 }: MainBannerProps) {
     const banner = (
