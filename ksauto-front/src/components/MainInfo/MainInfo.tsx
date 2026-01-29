@@ -5,6 +5,7 @@ import './MainInfo.css';
 import { isInfoBeforeReportError } from "@/lib/api/infoBeforeReport";
 import type { InfoBeforeReportSuccess } from "@/lib/api/infoBeforeReport";
 import { BASE_PATH } from "@/lib/basePath";
+import ServerMainInfo from "@/components/MainInfo/serverMainInfo";
 
 
 function declensionRu(n: number, one: string, few: string, many: string) {
@@ -16,15 +17,24 @@ function declensionRu(n: number, one: string, few: string, many: string) {
     if (last === 1) return one;
     return many;
 }
-
+type CarTypeItem = { url: string; text: string; img: string };
+type PopularBrandItem = { url: string; name: string };
+type MainInfoProps = {
+    initialData: {
+        offersCount: number;
+        offersWord: string;
+        offersUrl: string;
+        carTypes: CarTypeItem[];
+        popularBrands: PopularBrandItem[];
+        brandsAllUrl: string;
+    };
+};
 function formatNumber(n: number) {
     return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-export default function MainInfo() {
-    const [offersCount, setOffersCount] = useState<number | null>(null);
-    const [offersWord, setOffersWord] = useState<string>("предложений");
-    const [offersUrl, setOffersUrl] = useState<string>();
+export default function MainInfo({ initialData }: MainInfoProps) {
+
 
     const [searchValue, setSearchValue] = useState("");
 
@@ -34,66 +44,13 @@ export default function MainInfo() {
     const [costsView, setCostsView] = useState<CostsView>("form");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    type CarTypeItem = { url: string; text: string; img: string };
-    type PopularBrandItem = { url: string; name: string };
 
-    const [carTypes, setCarTypes] = useState<CarTypeItem[]>([]);
-    const [popularBrands, setPopularBrands] = useState<PopularBrandItem[]>([]);
-    const [brandsAllUrl, setBrandsAllUrl] = useState<string>("/catalog/cars/?showfilter=Y");
+
 
     const [isAppPopupOpen, setAppPopupOpen] = useState(false);
     const [appPopupTab, setAppPopupTab] = useState<"iOS" | "Android">("iOS");
 
-    useEffect(() => {
-        const fetchMainSection = async () => {
-            try {
-                const res = await fetch(`/next_main/api/main-sections`);
-                const data = await res.json();
 
-                const block1 = data?.result?.block1;
-                const block2 = data?.result?.block2;
-                const block3 = data?.result?.block3;
-
-                // ===== block1 =====
-                const countStr = block1?.count ?? "0";
-                const countNum = parseInt(String(countStr).replace(/\s/g, ""), 10) || 0; // "7 012" -> 7012
-                setOffersCount(countNum);
-
-                setOffersUrl(block1?.title_url1);
-                setOffersWord(block1?.count_text || "предложений");
-
-                // ===== block2 (Тип автомобиля) =====
-                const types: CarTypeItem[] = block2
-                    ? [
-                        { url: block2.title_url1, text: block2.title_url1_text, img: block2.title_url1_img },
-                        { url: block2.title_url2, text: block2.title_url2_text, img: block2.title_url2_img },
-                        { url: block2.title_url3, text: block2.title_url3_text, img: block2.title_url3_img },
-                        { url: block2.title_url4, text: block2.title_url4_text, img: block2.title_url4_img },
-                    ].filter((x) => x.url && x.text && x.img)
-                    : [];
-
-                setCarTypes(types);
-
-                // ===== block3 (Популярные марки) =====
-                const brands: PopularBrandItem[] = Array.isArray(block3?.list) ? block3.list : [];
-                setPopularBrands(brands);
-
-                setBrandsAllUrl(block3?.all || "/catalog/cars/?showfilter=Y");
-            } catch (e) {
-                console.error("Failed to fetch main sections:", e);
-
-                setOffersCount(0);
-                setOffersWord("предложений");
-                setOffersUrl("/catalog/cars/");
-
-                setCarTypes([]);
-                setPopularBrands([]);
-                setBrandsAllUrl("/catalog/cars/?showfilter=Y");
-            }
-        };
-
-        fetchMainSection();
-    }, []);
 
     useEffect(() => {
         // закрытие по Esc
@@ -136,66 +93,14 @@ export default function MainInfo() {
     return (
         <div className="main-wrapper-body new-container">
             {/* ===== banner-main ===== */}
-            <div className="banner-main">
-                <div className="banner-main-text">
-                    <h1 className="banner-main-title">Купить или самостоятельно продать автомобиль</h1>
-                    <p> Доступно по всей России </p>
-
-                    <a
-                        href={offersUrl}
-                        className="link_btn link_btn__dark mob-link_btn___catalog-btn desk-catalog-vse desk-catalog-vse-pc"
-                    >
-                        {offersCount !== null && (
-                            <>
-                                Показать {formatNumber(offersCount)} {offersWord}
-                            </>
-                        )}
-                    </a>
-
-                    <a
-                        href="/catalog/cars/?showfilter=Y"
-                        className="link_btn link_btn__dark mob-link_btn___catalog-btn desk-catalog-vse desk-catalog-vse-mb"
-                    >
-                        Поиск авто по параметрам
-                    </a>
-                </div>
-
-                <div className="banner-catalog">
-                    <div className="banner-catalog-type">
-                        <h2>Тип автомобиля</h2>
-                        <div className="banner-catalog-type-list">
-                            {carTypes.map((t) => (
-                                <a key={t.url} href={t.url} className="banner-catalog-type-item">
-                                    <img src={t.img} alt={t.text} />
-                                    <p>{t.text}</p>
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="banner-main-catalog-marks">
-                        <h2>Популярные марки</h2>
-                        <div>
-                            {popularBrands.slice(0, 9).map((b) => (
-                                <a key={b.url} href={b.url.startsWith("/") ? b.url : `/${b.url}`} className="banner-main__items-list">
-                                    {b.name}
-                                </a>
-                            ))}
-
-                            <a className="banner-main-catalog-marks-all" href={brandsAllUrl}>
-                                Смотреть все
-                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M4.64645 5.85355C4.84171 6.04882 5.15829 6.04882 5.35355 5.85355L9.85355 1.35355C10.0488 1.15829 10.0488 0.841709 9.85355 0.646447C9.65829 0.451184 9.34171 0.451184 9.14645 0.646447L5 4.79289L0.853553 0.646447C0.658291 0.451184 0.341709 0.451184 0.146447 0.646447C-0.0488155 0.841709 -0.0488155 1.15829 0.146447 1.35355L4.64645 5.85355Z"
-                                        fill="#E23737"
-                                        style={{ fill: "#E23737", stroke: "none" }}
-                                    />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <ServerMainInfo
+                offersCount={initialData.offersCount}
+                offersWord={initialData.offersWord}
+                offersUrl={initialData.offersUrl}
+                carTypes={initialData.carTypes}
+                popularBrands={initialData.popularBrands}
+                brandsAllUrl={initialData.brandsAllUrl}
+            />
 
             {/* ===== main-costs ===== */}
             <div className="main-costs">
@@ -324,7 +229,7 @@ export default function MainInfo() {
                                     e.preventDefault();
                                     setCarInfo(null);
 
-                                    fetch(`/next_main/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
+                                    fetch(`/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
                                         .then((res) => res.json())
                                         .then((data) => {
                                             const result = data.result;
