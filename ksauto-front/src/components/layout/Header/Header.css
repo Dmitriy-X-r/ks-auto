@@ -23,3 +23,10 @@
   background-position: center;
   flex: 0 0 20px;
 }
+
+@media (max-width: 1000px) {
+    .header.scroll .header-add .link_btn {
+        width: 32px;
+        height: 32px;
+    }
+}

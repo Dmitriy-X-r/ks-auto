@@ -23,7 +23,6 @@ export default function ServerMainInfo({
                                            brandsAllUrl,
                                        }: Props) {
     return (
-        <div className="main-wrapper-body">
             <div className="banner-main">
                 <div className="banner-main-text">
                     <h1 className="banner-main-title">
@@ -89,6 +88,5 @@ export default function ServerMainInfo({
                     </div>
                 </div>
             </div>
-        </div>
     );
 }
