@@ -120,8 +120,8 @@ export default function Header({ catalogsData }: HeaderProps) {
         if (cities.length || citiesLoading) return;
         setCitiesLoading(true);
         try {
-            const res = await fetch(`/next_main/api/cities`, { cache: "no-store" });
-            const data = (await res.json()) as { result: string[] };
+            const res = await fetch("/next_main/api/search-city");
+            const data = await res.json();
             setCities(Array.isArray(data.result) ? data.result : []);
         } finally {
             setCitiesLoading(false);
