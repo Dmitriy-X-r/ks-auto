@@ -41,7 +41,7 @@ export async function getLastAdsClient({
                                            pageSize = 11,
                                            premium = false
                                        }) {
-    const res = await fetch(`/next_main/api/last-ads?page=${page}&pageSize=${pageSize}&premium=${premium}`);
+    const res = await fetch(`/api/last-ads?page=${page}&pageSize=${pageSize}&premium=${premium}`);
     if (!res.ok) throw new Error("Failed to fetch last ads from proxy");
     return res.json();
 }

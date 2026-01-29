@@ -1,6 +1,7 @@
 .main-banner-container {
-    max-width: 1180px;
+    max-width: 1220px;
     margin: 0 auto;
+    padding: 0 20px;
 }
 
 .main-banner {

@@ -25,7 +25,7 @@ export function ContactPopup({ phone, name, time, userId, onClose,portalId }: Pr
     const handleShowPhone = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/next_main/api/mango-phone?r_num_string=${phone}&user_id=${userId}`);
+            const res = await fetch(`/api/mango-phone?r_num_string=${phone}&user_id=${userId}`);
             const data = await res.json();
             setMangoPhone(data.result?.status === "success" ? data.result.phone : "Ошибка");
         } catch {

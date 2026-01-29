@@ -3,8 +3,9 @@
 import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
-import { A11y } from "swiper/modules";
+import { A11y, Pagination } from "swiper/modules"; // Импортируем модуль Pagination
 import "swiper/css";
+import "swiper/css/pagination";
 
 type Props = {
   pictures: string[];
@@ -73,10 +74,11 @@ export function CardImagesSlider({ pictures, alt, baseUrl = "" }: Props) {
       onClick={(e) => e.stopPropagation()}
     >
       <Swiper
-        modules={[A11y]}
+        modules={[A11y, Pagination]} // Добавляем Pagination в список модулей
         slidesPerView={1}
         allowTouchMove={false}
         speed={180}
+        pagination={{ clickable: true }} // Включаем кликабельные точки пагинации
         onSwiper={(swiper) => (swiperRef.current = swiper)}
       >
         {pictures.map((src, idx) => (

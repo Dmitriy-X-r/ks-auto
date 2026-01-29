@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import './Footer.css';
 
 export default function Footer() {
     const [showArrow, setShowArrow] = useState(false);
@@ -128,7 +129,7 @@ export default function Footer() {
 
             {/* Стрелка наверх */}
             <div
-                className="arrow-up"
+                className="arrow-up show"
                 id="arrow-up"
                 onClick={scrollToTop}
                 role="button"
