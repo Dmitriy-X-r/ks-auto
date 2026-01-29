@@ -5,6 +5,7 @@ import "./styles/editor.css";
 import "./styles/new-styles.css";
 import "./styles/Top100.css"
 import './styles/new-mobil_style.css';
+import './styles/custom.css';
 
 // import Header from "@/components/layout/Header/Header";
 import HeaderServer from "@/components/layout/Header/HeaderServer";
