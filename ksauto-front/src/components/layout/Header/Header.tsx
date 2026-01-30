@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import './Header.css';
 import { BASE_PATH } from "@/lib/basePath";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css"; // Подключаем базовые стили Swiper
 
 type MenuItem = { href: string; label: string; icon?: string };
 
@@ -88,6 +90,32 @@ export default function Header({ catalogsData }: HeaderProps) {
     const isMobile = () => window.innerWidth <= 600;
     const isTabletOrLess = () => window.innerWidth <= 1000;
 
+    const [isMobileSlider, setIsMobileSlider] = useState(false);
+
+    const [isChildOverlayOpen, setIsChildOverlayOpen] = useState(false);
+    const [activeCatalogChildren, setActiveCatalogChildren] = useState<CatalogChild[]>([]);
+    const [activeCatalogLabel, setActiveCatalogLabel] = useState<string>("");
+
+    // Определяем, мобильный ли размер экрана
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileSlider(window.innerWidth <= 550);
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize(); // Проверяем размер экрана при монтировании компонента
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const getSlidesPerView = () => {
+        // Определяем, сколько элементов помещается на экране
+        if (isMobileSlider) {
+            return Math.floor(window.innerWidth / 200); // Уменьшаем размер на мобильных устройствах, это можно настроить под размер элементов
+        }
+        return 1; // Для десктопа показываем по одному элементу на слайде
+    };
+
     const closeCatalogMobileOverlay = () => {
         setActiveCatalogId(null);
         document.body.classList.remove("scroll-no");
@@ -110,6 +138,19 @@ export default function Header({ catalogsData }: HeaderProps) {
     };
 
 
+    const toggleCatalogMob = (id: string, label: string, childs: CatalogChild[]) => {
+        if (isMobile()) {
+            setActiveCatalogChildren(childs);
+            setActiveCatalogLabel(label);
+            setIsChildOverlayOpen(true);
+        } else {
+            setActiveCatalogId((prev) => (prev === id ? null : id));
+        }
+    };
+
+    const closeChildOverlay = () => {
+        setIsChildOverlayOpen(false);
+    };
 
     useEffect(() => {
         const saved = typeof window !== "undefined" ? localStorage.getItem("city") : null;
@@ -221,7 +262,7 @@ export default function Header({ catalogsData }: HeaderProps) {
                         {/* GEO desktop */}
                         <div className="header-geo" onClick={() => setGeoOpen(true)} role="button" tabIndex={0}>
                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0.803066 0.437536C0.952166 0.30091 1.16889 0.267554 1.35217 0.35302L11.3404 5.01061C11.5216 5.0951 11.6351 5.27943 11.6289 5.47928C11.6227 5.67912 11.498 5.85606 11.3119 5.92915L7.28464 7.51091L5.35789 11.385C5.26885 11.564 5.08173 11.6728 4.8821 11.6616C4.68248 11.6503 4.50874 11.5212 4.44036 11.3334L0.671015 0.977184C0.601848 0.787149 0.653966 0.574161 0.803066 0.437536ZM2.02356 1.76947L4.98147 9.89625L6.47499 6.89324C6.53016 6.7823 6.62456 6.6958 6.73989 6.65051L9.86162 5.42441L2.02356 1.76947Z" fill="white" style={{fill: "white", stroke: "none"}}></path>
+                                <path d="M0.803066 0.437536C0.952166 0.30091 1.16889 0.267554 1.35217 0.35302L11.3404 5.01061C11.5216 5.0951 11.6351 5.27943 11.6289 5.47928C11.6227 5.67912 11.498 5.85606 11.3119 5.92915L7.28464 7.51091L5.35789 11.385C5.26885 11.564 5.08173 11.6728 4.8821 11.6616C4.68248 11.6503 4.50874 11.5212 4.44036 11.3334L0.671015 0.977184C0.601848 0.787149 0.653966 0.574161 0.803066 0.437536ZM2.02356 1.76947L4.98147 9.89625L6.47499 6.89324C6.53016 6.7823 6.62456 6.6958 6.73989 6.65051L9.86162 5.42441L2.02356 1.76947Z" fill="white" style={{ fill: "white", stroke: "none" }}></path>
                             </svg>
                             <p>{selectedCity || "Любой город"}</p>
                         </div>
@@ -286,7 +327,7 @@ export default function Header({ catalogsData }: HeaderProps) {
                             {/* geo mobile trigger */}
                             <div className="header-burger-geo" onClick={() => setGeoMobOpen(true)} role="button" tabIndex={0}>
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0.803066 0.437536C0.952166 0.30091 1.16889 0.267554 1.35217 0.35302L11.3404 5.01061C11.5216 5.0951 11.6351 5.27943 11.6289 5.47928C11.6227 5.67912 11.498 5.85606 11.3119 5.92915L7.28464 7.51091L5.35789 11.385C5.26885 11.564 5.08173 11.6728 4.8821 11.6616C4.68248 11.6503 4.50874 11.5212 4.44036 11.3334L0.671015 0.977184C0.601848 0.787149 0.653966 0.574161 0.803066 0.437536ZM2.02356 1.76947L4.98147 9.89625L6.47499 6.89324C6.53016 6.7823 6.62456 6.6958 6.73989 6.65051L9.86162 5.42441L2.02356 1.76947Z" fill="#E23737" style={{fill: "#E23737", stroke: "none"}}></path>
+                                    <path d="M0.803066 0.437536C0.952166 0.30091 1.16889 0.267554 1.35217 0.35302L11.3404 5.01061C11.5216 5.0951 11.6351 5.27943 11.6289 5.47928C11.6227 5.67912 11.498 5.85606 11.3119 5.92915L7.28464 7.51091L5.35789 11.385C5.26885 11.564 5.08173 11.6728 4.8821 11.6616C4.68248 11.6503 4.50874 11.5212 4.44036 11.3334L0.671015 0.977184C0.601848 0.787149 0.653966 0.574161 0.803066 0.437536ZM2.02356 1.76947L4.98147 9.89625L6.47499 6.89324C6.53016 6.7823 6.62456 6.6958 6.73989 6.65051L9.86162 5.42441L2.02356 1.76947Z" fill="#E23737" style={{ fill: "#E23737", stroke: "none" }}></path>
                                 </svg>
                                 <p>{selectedCity || "Любой город"}</p>
                             </div>
@@ -314,7 +355,7 @@ export default function Header({ catalogsData }: HeaderProps) {
                                 <div className="link_btn link_btn__dark ads-link__btn ads-link__btn add-offer" onClick={() => setAddOfferOpen(true)}>
                                     <span>Разместить объявление</span>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M10.625 4.375C10.625 4.02982 10.3452 3.75 10 3.75C9.65482 3.75 9.375 4.02982 9.375 4.375V9.375H4.375C4.02982 9.375 3.75 9.65482 3.75 10C3.75 10.3452 4.02982 10.625 4.375 10.625H9.375V15.625C9.375 15.9702 9.65482 16.25 10 16.25C10.3452 16.25 10.625 15.9702 10.625 15.625V10.625H15.625C15.9702 10.625 16.25 10.3452 16.25 10C16.25 9.65482 15.9702 9.375 15.625 9.375H10.625V4.375Z" fill="white" style={{fill: "white", stroke: "none"}}></path>
+                                        <path d="M10.625 4.375C10.625 4.02982 10.3452 3.75 10 3.75C9.65482 3.75 9.375 4.02982 9.375 4.375V9.375H4.375C4.02982 9.375 3.75 9.65482 3.75 10C3.75 10.3452 4.02982 10.625 4.375 10.625H9.375V15.625C9.375 15.9702 9.65482 16.25 10 16.25C10.3452 16.25 10.625 15.9702 10.625 15.625V10.625H15.625C15.9702 10.625 16.25 10.3452 16.25 10C16.25 9.65482 15.9702 9.375 15.625 9.375H10.625V4.375Z" fill="white" style={{ fill: "white", stroke: "none" }}></path>
                                     </svg>
                                 </div>
                             </div>
@@ -363,7 +404,7 @@ export default function Header({ catalogsData }: HeaderProps) {
                         {/* search icon (открывает модалку) */}
                         <div className="header-search-icon" onClick={() => setSearchOpen(true)} role="button" tabIndex={0}>
                             <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20.2046 15.25C20.2046 12.4886 17.966 10.25 15.2046 10.25C12.4432 10.25 10.2046 12.4886 10.2046 15.25C10.2046 18.0114 12.4432 20.25 15.2046 20.25C17.966 20.25 20.2046 18.0114 20.2046 15.25ZM18.9114 20.2826C17.8743 21.0478 16.5923 21.5 15.2046 21.5C11.7528 21.5 8.95459 18.7018 8.95459 15.25C8.95459 11.7982 11.7528 9 15.2046 9C18.6564 9 21.4546 11.7982 21.4546 15.25C21.4546 16.6377 21.0023 17.9197 20.2372 18.9568L23.68 22.3996C24.0461 22.7657 24.0461 23.3593 23.68 23.7254C23.3139 24.0915 22.7203 24.0915 22.3542 23.7254L18.9114 20.2826Z" style={{fill: "#353433", stroke: "none"}}></path>
+                                <path d="M20.2046 15.25C20.2046 12.4886 17.966 10.25 15.2046 10.25C12.4432 10.25 10.2046 12.4886 10.2046 15.25C10.2046 18.0114 12.4432 20.25 15.2046 20.25C17.966 20.25 20.2046 18.0114 20.2046 15.25ZM18.9114 20.2826C17.8743 21.0478 16.5923 21.5 15.2046 21.5C11.7528 21.5 8.95459 18.7018 8.95459 15.25C8.95459 11.7982 11.7528 9 15.2046 9C18.6564 9 21.4546 11.7982 21.4546 15.25C21.4546 16.6377 21.0023 17.9197 20.2372 18.9568L23.68 22.3996C24.0461 22.7657 24.0461 23.3593 23.68 23.7254C23.3139 24.0915 22.7203 24.0915 22.3542 23.7254L18.9114 20.2826Z" style={{ fill: "#353433", stroke: "none" }}></path>
                             </svg>
                         </div>
 
@@ -439,7 +480,7 @@ export default function Header({ catalogsData }: HeaderProps) {
                         {/* login desktop (статично not auth) */}
                         <Link href="/auth/" className="header-account header-account-not-auth">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12.5 6.25C12.5 4.86929 11.3807 3.75 10 3.75C8.61929 3.75 7.5 4.86929 7.5 6.25C7.5 7.63071 8.61929 8.75 10 8.75C11.3807 8.75 12.5 7.63071 12.5 6.25ZM13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25ZM3.75 15.9375C3.75 16.1101 3.88991 16.25 4.06249 16.25H15.9375C16.1101 16.25 16.25 16.1101 16.25 15.9375C16.25 15.2296 15.7874 14.3996 14.6408 13.6829C13.5118 12.9773 11.8743 12.5 10 12.5C8.12572 12.5 6.48821 12.9773 5.3592 13.6829C4.21256 14.3996 3.75 15.2296 3.75 15.9375ZM2.5 15.9375C2.5 13.3487 5.85786 11.25 10 11.25C14.1421 11.25 17.5 13.3487 17.5 15.9375C17.5 16.8004 16.8004 17.5 15.9375 17.5H4.06249C3.19955 17.5 2.5 16.8004 2.5 15.9375Z" fill="#AAA6A1" style={{stroke: "none", fill: " #AAA6A1"}}></path>
+                                <path d="M12.5 6.25C12.5 4.86929 11.3807 3.75 10 3.75C8.61929 3.75 7.5 4.86929 7.5 6.25C7.5 7.63071 8.61929 8.75 10 8.75C11.3807 8.75 12.5 7.63071 12.5 6.25ZM13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25ZM3.75 15.9375C3.75 16.1101 3.88991 16.25 4.06249 16.25H15.9375C16.1101 16.25 16.25 16.1101 16.25 15.9375C16.25 15.2296 15.7874 14.3996 14.6408 13.6829C13.5118 12.9773 11.8743 12.5 10 12.5C8.12572 12.5 6.48821 12.9773 5.3592 13.6829C4.21256 14.3996 3.75 15.2296 3.75 15.9375ZM2.5 15.9375C2.5 13.3487 5.85786 11.25 10 11.25C14.1421 11.25 17.5 13.3487 17.5 15.9375C17.5 16.8004 16.8004 17.5 15.9375 17.5H4.06249C3.19955 17.5 2.5 16.8004 2.5 15.9375Z" fill="#AAA6A1" style={{ stroke: "none", fill: " #AAA6A1" }}></path>
                             </svg>
                             <span>Войти</span>
                         </Link>
@@ -449,7 +490,7 @@ export default function Header({ catalogsData }: HeaderProps) {
                             <div className="link_btn link_btn__dark ads-link__btn ads-link__btn add-offer" onClick={() => setAddOfferOpen(true)}>
                                 <span>Разместить объявление</span>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.625 4.375C10.625 4.02982 10.3452 3.75 10 3.75C9.65482 3.75 9.375 4.02982 9.375 4.375V9.375H4.375C4.02982 9.375 3.75 9.65482 3.75 10C3.75 10.3452 4.02982 10.625 4.375 10.625H9.375V15.625C9.375 15.9702 9.65482 16.25 10 16.25C10.3452 16.25 10.625 15.9702 10.625 15.625V10.625H15.625C15.9702 10.625 16.25 10.3452 16.25 10C16.25 9.65482 15.9702 9.375 15.625 9.375H10.625V4.375Z" fill="white" style={{fill: "white", stroke: "none"}}></path>
+                                    <path d="M10.625 4.375C10.625 4.02982 10.3452 3.75 10 3.75C9.65482 3.75 9.375 4.02982 9.375 4.375V9.375H4.375C4.02982 9.375 3.75 9.65482 3.75 10C3.75 10.3452 4.02982 10.625 4.375 10.625H9.375V15.625C9.375 15.9702 9.65482 16.25 10 16.25C10.3452 16.25 10.625 15.9702 10.625 15.625V10.625H15.625C15.9702 10.625 16.25 10.3452 16.25 10C16.25 9.65482 15.9702 9.375 15.625 9.375H10.625V4.375Z" fill="white" style={{ fill: "white", stroke: "none" }}></path>
                                 </svg>
                             </div>
                         </div>
@@ -458,103 +499,132 @@ export default function Header({ catalogsData }: HeaderProps) {
                     {/* каталоги mobile контейнер (как в старом) */}
                     <div className="catalogs-header-container catalogs-header-container-mob" ref={catalogsMobRef}>
                         <div className="catalogs-header-wrapper">
-                            <div className="catalogs-header-list">
-                                {catalogsData
-                                    .filter((el) => !el.hidden)
-                                    .map((el) => {
-                                        const hasChilds = !!el.childs?.length;
-                                        const isActive = activeCatalogId === el.id;
+                            {isMobileSlider ? (
+                                <Swiper
+                                    slidesPerView={getSlidesPerView()}
+                                    spaceBetween={10}
+                                    pagination={{ clickable: true }}
+                                    className="catalogs-header-list"
+                                >
+                                    {catalogsData
+                                        .filter((el) => !el.hidden)
+                                        .map((el) => {
+                                            const hasChilds = !!el.childs?.length;
+                                            const isActive = activeCatalogId === el.id;
 
-                                        return (
-                                            <div
-                                                key={`mobtab-${el.id}`}
-                                                className={`catalogs-header-item-wrapper${isActive ? " active" : ""}`}
-                                                data-id={el.id}
-                                                {...(hasChilds ? ({ "data-has-childs": true } as any) : {})}
-                                                onClick={(e) => {
-                                                    if (!hasChilds) return;
-                                                    if (!isTabletOrLess()) return;
+                                            return (
+                                                <SwiperSlide key={el.id} className={`catalogs-header-item-wrapper${isActive ? " active" : ""}`}>
+                                                    <a
+                                                        href={!hasChilds ? el.href : undefined}
+                                                        className="catalogs-header-item"
+                                                        onClick={(e) => {
+                                                            if (hasChilds) {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                toggleCatalogMob(el.id, el.label, el.childs || []);
+                                                            }
+                                                        }}
+                                                    >
+                                                        {el.picture ? <img src={el.picture} alt={el.label} /> : null}
+                                                        <span>
+                                                            {el.label}
+                                                            {hasChilds ? (
+                                                                <svg className="catalogs-header-item-arrow" width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M5.73484 4.35983C5.88128 4.21339 6.11872 4.21339 6.26516 4.35983L9.64017 7.73484C9.78661 7.88128 9.78661 8.11872 9.64017 8.26516C9.49372 8.41161 9.25628 8.41161 9.10983 8.26516L6 5.15533L2.89017 8.26516C2.74372 8.41161 2.50628 8.41161 2.35983 8.26516C2.21339 8.11872 2.21339 7.88128 2.35983 7.73484L5.73484 4.35983Z" />
+                                                                </svg>
+                                                            ) : null}
+                                                        </span>
+                                                    </a>
+                                                </SwiperSlide>
+                                            );
+                                        })}
+                                </Swiper>
+                            ) : (
+                                <div className="catalogs-header-list">
+                                    {catalogsData
+                                        .filter((el) => !el.hidden)
+                                        .map((el) => {
+                                            const hasChilds = !!el.childs?.length;
+                                            const isActive = activeCatalogId === el.id;
 
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-
-                                                    toggleCatalog(el.id);
-                                                }}
-                                            >
-                                                <a href={!hasChilds ? el.href : undefined} className="catalogs-header-item">
-                                                    {el.picture ? <img src={el.picture} alt={el.label} /> : null}
-                                                    <span>
-                                                        {el.label}
-                                                        {hasChilds ? (
-                                                            <svg className="catalogs-header-item-arrow" width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <path d="M5.73484 4.35983C5.88128 4.21339 6.11872 4.21339 6.26516 4.35983L9.64017 7.73484C9.78661 7.88128 9.78661 8.11872 9.64017 8.26516C9.49372 8.41161 9.25628 8.41161 9.10983 8.26516L6 5.15533L2.89017 8.26516C2.74372 8.41161 2.50628 8.41161 2.35983 8.26516C2.21339 8.11872 2.21339 7.88128 2.35983 7.73484L5.73484 4.35983Z" />
-                                                            </svg>
-                                                        ) : null}
-                                                    </span>
-                                                </a>
-                                            </div>
-                                        );
-                                    })}
-                            </div>
-
-                            {/* Моб-оверлеи детей */}
-                            {catalogsData
-                                .filter((el) => !el.hidden && !!el.childs?.length)
-                                .map((el) => {
-                                    const isActive = activeCatalogId === el.id;
-
-                                    return (
-                                        <div
-                                            key={`mobchild-${el.id}`}
-                                            className={`catalog-header-childs-wrapper-mob${isActive ? " active" : ""}`}
-                                            data-id={el.id}
-                                            onClick={(e) => {
-                                                if (e.target === e.currentTarget) {
-                                                    closeCatalogMobileOverlay();
-                                                }
-                                            }}
-                                        >
-                                            <div className="catalog-header-childs-container">
+                                            return (
                                                 <div
-                                                    className="catalog-header-childs-mob-close"
-                                                    onClick={() => closeCatalogMobileOverlay()}
-                                                    role="button"
-                                                    tabIndex={0}
+                                                    key={el.id}
+                                                    className={`catalogs-header-item-wrapper${isActive ? " active" : ""}`}
+                                                    data-id={el.id}
                                                 >
-                                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M8.68306 8.68306C8.92714 8.43898 9.32286 8.43898 9.56694 8.68306L16 15.1161L22.4331 8.68306C22.6771 8.43898 23.0729 8.43898 23.3169 8.68306C23.561 8.92714 23.561 9.32286 23.3169 9.56694L16.8839 16L23.3169 22.4331C23.561 22.6771 23.561 23.0729 23.3169 23.3169C23.0729 23.561 22.6771 23.561 22.4331 23.3169L16 16.8839L9.56694 23.3169C9.32286 23.561 8.92714 23.561 8.68306 23.3169C8.43898 23.0729 8.43898 22.6771 8.68306 22.4331L15.1161 16L8.68306 9.56694C8.43898 9.32286 8.43898 8.92714 8.68306 8.68306Z"
-                                                            style={{ fill: "#353433" }}
-                                                        />
-                                                    </svg>
-                                                </div>
+                                                    <a
+                                                        href={!hasChilds ? el.href : undefined}
+                                                        className="catalogs-header-item"
+                                                        onClick={(e) => {
+                                                            if (hasChilds) {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                toggleCatalogMob(el.id, el.label, el.childs || []);
+                                                            }
+                                                        }}
+                                                    >
+                                                        {el.picture ? <img src={el.picture} alt={el.label} /> : null}
+                                                        <span>
+                                                            {el.label}
+                                                            {hasChilds ? (
+                                                                <svg className="catalogs-header-item-arrow" width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M5.73484 4.35983C5.88128 4.21339 6.11872 4.21339 6.26516 4.35983L9.64017 7.73484C9.78661 7.88128 9.78661 8.11872 9.64017 8.26516C9.49372 8.41161 9.25628 8.41161 9.10983 8.26516L6 5.15533L2.89017 8.26516C2.74372 8.41161 2.50628 8.41161 2.35983 8.26516C2.21339 8.11872 2.21339 7.88128 2.35983 7.73484L5.73484 4.35983Z" />
+                                                                </svg>
+                                                            ) : null}
+                                                        </span>
+                                                    </a>
 
-                                                {el.childsTitle ? <p className="catalog-header-childs-title">{el.childsTitle}</p> : null}
-
-                                                <div className="catalog-header-childs-list">
-                                                    {(el.childs || []).map((child) => (
-                                                        <a
-                                                            key={child.href}
-                                                            href={child.href}
-                                                            className="catalog-header-child"
-                                                            onClick={() => {
-                                                                closeCatalogMobileOverlay();
-                                                            }}
-                                                        >
-                                                            <div className="catalog-header-child-img-wrapper">
-                                                                {child.picture ? (
-                                                                    <img src={child.picture} alt="" className={el.isBigImg ? "catalog-header-child-bi" : ""} />
-                                                                ) : null}
+                                                    {hasChilds && isActive && (
+                                                        <div className="catalog-header-childs-wrapper">
+                                                            <div className="catalog-header-childs-container">
+                                                                {(el.childs || []).map((child) => (
+                                                                    <a key={child.href} href={child.href} className="catalog-header-child">
+                                                                        <div className="catalog-header-child-img-wrapper">
+                                                                            {child.picture ? <img src={child.picture} alt="" className={el.isBigImg ? "catalog-header-child-bi" : ""} /> : null}
+                                                                        </div>
+                                                                        {child.label}
+                                                                        {hasChilds ? (
+                                                                            <svg className="catalogs-header-item-arrow" width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M5.73484 4.35983C5.88128 4.21339 6.11872 4.21339 6.26516 4.35983L9.64017 7.73484C9.78661 7.88128 9.78661 8.11872 9.64017 8.26516C9.49372 8.41161 9.25628 8.41161 9.10983 8.26516L6 5.15533L2.89017 8.26516C2.74372 8.41161 2.50628 8.41161 2.35983 8.26516C2.21339 8.11872 2.21339 7.88128 2.35983 7.73484L5.73484 4.35983Z" />
+                                                                            </svg>
+                                                                        ) : null}
+                                                                    </a>
+                                                                ))}
                                                             </div>
-                                                            {child.label}
-                                                        </a>
-                                                    ))}
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                            );
+                                        })}
+                                </div>
+                            )}
                         </div>
+
+                        {/* Мобильное окно для дочерних элементов */}
+                        {isChildOverlayOpen && (
+                            <div className="catalog-header-childs-overlay">
+                                <div className="catalog-header-childs-overlay-background" onClick={closeChildOverlay}></div>
+                                <div className="catalog-header-childs-overlay-inner">
+                                    <div className="catalog-header-childs-overlay-close" onClick={closeChildOverlay}>
+                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8.68306 8.68306C8.92714 8.43898 9.32286 8.43898 9.56694 8.68306L16 15.1161L22.4331 8.68306C22.6771 8.43898 23.0729 8.43898 23.3169 8.68306C23.561 8.92714 23.561 9.32286 23.3169 9.56694L16.8839 16L23.3169 22.4331C23.561 22.6771 23.561 23.0729 23.3169 23.3169C23.0729 23.561 22.6771 23.561 22.4331 23.3169L16 16.8839L9.56694 23.3169C9.32286 23.561 8.92714 23.561 8.68306 23.3169C8.43898 23.0729 8.43898 22.6771 8.68306 22.4331L15.1161 16L8.68306 9.56694C8.43898 9.32286 8.43898 8.92714 8.68306 8.68306Z" style={{ fill: "#353433", stroke: "none" }} />
+                                        </svg>
+                                    </div>
+                                    <p className="catalog-header-childs-overlay-header">Категории {activeCatalogLabel}</p>
+                                    <div className="catalog-header-childs-list">
+                                        {activeCatalogChildren.map((child) => (
+                                            <a key={child.href} href={child.href} className="catalog-header-child">
+                                                <div className="catalog-header-child-img-wrapper">
+                                                    {child.picture ? <img src={child.picture} alt="" /> : null}
+                                                </div>
+                                                {child.label}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     {/* /CATALOGS */}
                 </div>
@@ -657,7 +727,7 @@ export default function Header({ catalogsData }: HeaderProps) {
                 {/* GEO POPUP mobile */}
                 <div
                     className={`geo-popup-mob geo-popup${isGeoMobOpen ? " show" : ""}${geoMobMode === "auto" ? " show-auto" : " show-handmade"
-                        }`}
+                    }`}
                     id="geo-popup-mob"
                 >
                     <div
@@ -804,13 +874,15 @@ export default function Header({ catalogsData }: HeaderProps) {
                     <div
                         className="header-search-modal-body"
                         style={{
+                            width: "320px",
                             position: "relative",
                             zIndex: 1,
-                            width: "min(720px, calc(100vw - 24px))",
                             background: "#fff",
                             borderRadius: 18,
                             boxShadow: "0px 16px 24px 0px #0000001F",
                             padding: 16,
+                            top: '-40px',
+                            right: '300px'
                         }}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -827,24 +899,6 @@ export default function Header({ catalogsData }: HeaderProps) {
                                     fontSize: 17,
                                 }}
                             />
-
-                            <button
-                                type="button"
-                                onClick={() => setSearchOpen(false)}
-                                style={{
-                                    width: 42,
-                                    height: 42,
-                                    borderRadius: 10,
-                                    border: "none",
-                                    background: "#EEEDEC",
-                                    cursor: "pointer",
-                                    flex: "0 0 auto",
-                                }}
-                                aria-label="Закрыть поиск"
-                                title="Закрыть"
-                            >
-                                ✕
-                            </button>
                         </div>
 
                         <div style={{ marginTop: 10, color: "#353433", opacity: 0.7, fontSize: 13 }}>Начните вводить запрос…</div>
