@@ -304,10 +304,7 @@ export default function Header({ catalogsData }: HeaderProps) {
                                 {/* not auth */}
                                 <Link href="/auth/" className="header-account header-menu__top-auth" onClick={() => setBurgerOpen(false)}>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M12.5 6.25C12.5 4.86929 11.3807 3.75 10 3.75C8.61929 3.75 7.5 4.86929 7.5 6.25C7.5 7.63071 8.61929 8.75 10 8.75C11.3807 8.75 12.5 7.63071 12.5 6.25ZM13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25ZM3.75 15.9375C3.75 16.1101 3.88991 16.25 4.06249 16.25H15.9375C16.1101 16.25 16.25 16.1101 16.25 15.9375C16.25 15.2296 15.7874 14.3996 14.6408 13.6829C13.5118 12.9773 11.8743 12.5 10 12.5C8.12572 12.5 6.48821 12.9773 5.3592 13.6829C4.21256 14.3996 3.75 15.2296 3.75 15.9375ZM2.5 15.9375C2.5 13.3487 5.85786 11.25 10 11.25C14.1421 11.25 17.5 13.3487 17.5 15.9375C17.5 16.8004 16.8004 17.5 15.9375 17.5H4.06249C3.19955 17.5 2.5 16.8004 2.5 15.9375Z"
-                                            fill="#AAA6A1"
-                                        />
+                                        <path d="M12.5 6.25C12.5 4.86929 11.3807 3.75 10 3.75C8.61929 3.75 7.5 4.86929 7.5 6.25C7.5 7.63071 8.61929 8.75 10 8.75C11.3807 8.75 12.5 7.63071 12.5 6.25ZM13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25ZM3.75 15.9375C3.75 16.1101 3.88991 16.25 4.06249 16.25H15.9375C16.1101 16.25 16.25 16.1101 16.25 15.9375C16.25 15.2296 15.7874 14.3996 14.6408 13.6829C13.5118 12.9773 11.8743 12.5 10 12.5C8.12572 12.5 6.48821 12.9773 5.3592 13.6829C4.21256 14.3996 3.75 15.2296 3.75 15.9375ZM2.5 15.9375C2.5 13.3487 5.85786 11.25 10 11.25C14.1421 11.25 17.5 13.3487 17.5 15.9375C17.5 16.8004 16.8004 17.5 15.9375 17.5H4.06249C3.19955 17.5 2.5 16.8004 2.5 15.9375Z" fill="#AAA6A1" style={{stroke: "none", fill: "#AAA6A1"}}></path>
                                     </svg>
                                     <span>Войти</span>
                                 </Link>
@@ -334,17 +331,29 @@ export default function Header({ catalogsData }: HeaderProps) {
 
                             {/* "поиск" внутри бургера — статикой */}
                             <div className="header-search-and-filter">
-                                <div className="header-search-wrapper" style={{ width: "100%" }}>
+                                <div className="header-search-wrapper"
+                                     style={{
+                                         width: "100%",
+                                         background: "#EEEDEC",
+                                         borderRadius: 10,
+                                         border: "none",
+                                         padding: "10px 12px",
+                                         fontSize: 17,
+                                         display: 'flex',
+                                         gap: 5,
+                                         alignItems: 'center',
+                                     }}
+                                >
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12.2046 6.75C12.2046 3.98858 9.96601 1.75 7.20459 1.75C4.44317 1.75 2.20459 3.98858 2.20459 6.75C2.20459 9.51142 4.44317 11.75 7.20459 11.75C9.96601 11.75 12.2046 9.51142 12.2046 6.75ZM10.9114 11.7826C9.87431 12.5478 8.59226 13 7.20459 13C3.75281 13 0.95459 10.2018 0.95459 6.75C0.95459 3.29822 3.75281 0.5 7.20459 0.5C10.6564 0.5 13.4546 3.29822 13.4546 6.75C13.4546 8.13767 13.0023 9.41972 12.2372 10.4568L15.68 13.8996C16.0461 14.2657 16.0461 14.8593 15.68 15.2254C15.3139 15.5915 14.7203 15.5915 14.3542 15.2254L10.9114 11.7826Z" style={{fill: "#AAA6A1", stroke: "none"}}></path>
+                                    </svg>
                                     <input
-                                        className="bx-form-control"
+                                        className="bx-form-control bx-form-control__hover"
                                         placeholder="Поиск по объявлениям"
                                         style={{
-                                            width: "100%",
-                                            background: "#EEEDEC",
-                                            borderRadius: 10,
                                             border: "none",
-                                            padding: "10px 12px",
-                                            fontSize: 17,
+                                            background: "transparent"
+                                            // fontSize: 17,
                                         }}
                                     />
                                 </div>
@@ -885,18 +894,29 @@ export default function Header({ catalogsData }: HeaderProps) {
                             right: '300px'
                         }}
                     >
-                        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <div
+                            style={{
+                                width: "100%",
+                                background: "#EEEDEC",
+                                borderRadius: 10,
+                                border: "none",
+                                padding: "10px 12px",
+                                fontSize: 17,
+                                display: 'flex',
+                                gap: 5,
+                                alignItems: 'center',
+                            }}
+                        >
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.2046 6.75C12.2046 3.98858 9.96601 1.75 7.20459 1.75C4.44317 1.75 2.20459 3.98858 2.20459 6.75C2.20459 9.51142 4.44317 11.75 7.20459 11.75C9.96601 11.75 12.2046 9.51142 12.2046 6.75ZM10.9114 11.7826C9.87431 12.5478 8.59226 13 7.20459 13C3.75281 13 0.95459 10.2018 0.95459 6.75C0.95459 3.29822 3.75281 0.5 7.20459 0.5C10.6564 0.5 13.4546 3.29822 13.4546 6.75C13.4546 8.13767 13.0023 9.41972 12.2372 10.4568L15.68 13.8996C16.0461 14.2657 16.0461 14.8593 15.68 15.2254C15.3139 15.5915 14.7203 15.5915 14.3542 15.2254L10.9114 11.7826Z" style={{fill: "#AAA6A1", stroke: "none"}}></path>
+                            </svg>
                             <input
                                 ref={searchInputRef}
-                                className="bx-form-control"
+                                className="bx-form-control bx-form-control__hover"
                                 placeholder="Поиск по объявлениям"
                                 style={{
-                                    width: "100%",
-                                    background: "#EEEDEC",
-                                    borderRadius: 10,
                                     border: "none",
-                                    padding: "12px 12px",
-                                    fontSize: 17,
+                                    background: "transparent"
                                 }}
                             />
                         </div>

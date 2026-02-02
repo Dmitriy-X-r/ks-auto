@@ -106,6 +106,28 @@
     object-fit: cover;
 }
 
+.bx-form-control__hover:focus-visible {
+    outline: none;
+}
+
+@media (max-width:1000px) {
+    .header-burger-wrapper {
+        gap: 10px;
+    }
+
+    .header-support-button {
+        max-width: 100%;
+        padding: 20px;
+    }
+}
+
+@media (max-width:800px) {
+    .header-burger-menu-item .burger-link {
+        gap: 5%;
+    }
+}
+
+
 @media (max-width:600px) {
     .catalog-header-child {
         font-family: 'Inter-Regular';
@@ -113,5 +135,9 @@
         padding: 5px 10px;
         border-bottom: 1px solid #EEEDEC;
         border-radius: 0;
+    }
+
+    .header-burger-menu-item .burger-link {
+        gap: 4%;
     }
 }
