@@ -25,8 +25,8 @@ export async function POST(req: NextRequest) {
         const token = getAuthToken();
         if (!token) return NextResponse.json({ error: "No auth token" }, { status: 401 });
 
-        if (action === "add") await addToFavorite(productId);
-        else if (action === "delete") await removeFromFavorite(productId);
+        if (action === "add") await addToFavorite(productId,token);
+        else if (action === "delete") await removeFromFavorite(productId,token);
 
         return NextResponse.json({ success: true });
     } catch (e) {
