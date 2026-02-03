@@ -6,7 +6,8 @@ import "./styles/new-styles.css";
 import "./styles/Top100.css"
 import './styles/new-mobil_style.css';
 import './styles/custom.css';
-
+import '@/components/utils/notification/style/style.css'
+import '@/components/utils/favorite/style/style.css'
 // import Header from "@/components/layout/Header/Header";
 import HeaderServer from "@/components/layout/Header/HeaderServer";
 import Footer from "@/components/layout/Footer/Footer";

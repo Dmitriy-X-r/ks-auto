@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import "./catalogCard.css";
 import { CardImagesSlider } from "./CardImagesSlider";
 import { CardImagesSliderMobile } from "./CardImagesSliderMobile";
+import {FavoriteButton} from "@/components/utils/favorite/FavoriteButton/FavoriteButton";
+
 
 interface CatalogCardProps {
   item: {
@@ -34,11 +36,11 @@ export function CatalogCard({ item }: CatalogCardProps) {
 
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth <= 1150); // если ширина экрана меньше 1150px
+      setIsMobile(window.innerWidth <= 1150);
     };
 
     checkIsMobile();
-    window.addEventListener("resize", checkIsMobile); // обновляем состояние при изменении размера окна
+    window.addEventListener("resize", checkIsMobile);
 
     return () => {
       window.removeEventListener("resize", checkIsMobile);
@@ -56,17 +58,8 @@ export function CatalogCard({ item }: CatalogCardProps) {
   return (
     <div className="catalog__items">
       <div
-        className={`catalog__items-fav ${isFav ? "active" : ""}`}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setFav((v) => !v);
-        }}
-        role="button"
-      >
-        <svg id="curve_chart" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.5 10.0543C4.5 7.90742 6.24039 5.9375 8.38728 5.9375C9.67202 5.9375 11.0625 6.5625 11.9999 7.5C12.9375 6.5625 14.328 5.9375 15.6127 5.9375C17.7596 5.9375 19.5 7.90742 19.5 10.0543C19.5 11.4136 18.9295 12.7105 17.9275 13.6289L12.6525 18.7424C12.2889 19.0949 11.711 19.0949 11.3474 18.7424L6.07249 13.6289C5.0705 12.7105 4.5 11.4136 4.5 10.0543Z"></path>
-        </svg>
+        className="catalog__items-fav">
+        <FavoriteButton itemId={item.id} />
       </div>
 
       <div className="catalog__items-link">

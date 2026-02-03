@@ -6,6 +6,7 @@ export interface Top100ApiItemRaw {
     NAME: string;
     CREATED_BY: string;
     ACTIVE_FROM: string;
+    ID: string;
     DETAIL_PAGE_URL: string | null;
     PRICE: string;
     CITY?: string | null;
@@ -17,6 +18,7 @@ export interface Top100ApiItemRaw {
     PICTURES?: string[] | null;
     CLUB_SERVICE?:string | null;
     CLUB_SERVICE_TEXT?: string | null;
+
 }
 interface Top100ApiResponse {
     result: {

@@ -10,5 +10,6 @@ export const API_ENDPOINTS={
     header_menu: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.header_menu`,
     main_sections: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.main_sections`,
     info_before_report: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.info_before_report`,
-    search_city: `${process.env.NEXT_PUBLIC_API_DOMAIN}/search.city`
+    search_city: `${process.env.NEXT_PUBLIC_API_DOMAIN}/search.city`,
+    get_favorites: `${process.env.NEXT_PUBLIC_API_DOMAIN}/favorite`
 }

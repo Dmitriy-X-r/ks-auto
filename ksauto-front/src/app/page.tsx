@@ -5,12 +5,14 @@ import LatestArrivals from "@/components/LatestArrivals/LatestArrivals";
 import NewsSection from "@/components/news/news-section/NewsSection";
 import {getTop100} from "@/lib/api/top100";
 import {getMainSections} from "@/lib/api/getMainSection";
+import {FavoritesProvider} from "@/providers/FavoritesProvider";
 
 export default async function HomePage() {
   const cars = await getTop100({ nPageSize: 10 });
   const mainSections = await getMainSections();
   return (
       <>
+      <FavoritesProvider>
         <div id="popup-root"></div>
         <MainBanner
             href="https://t.me/carsplus_sales"
@@ -22,6 +24,7 @@ export default async function HomePage() {
         <Top100Section items={cars}/>
         <LatestArrivals />
         <NewsSection />
+      </FavoritesProvider>
       </>
   );
 }
