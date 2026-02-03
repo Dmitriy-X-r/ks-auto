@@ -55,7 +55,7 @@ export function mapTop100(item: Top100ApiItemRaw): CatalogCard {
         : 0;
 
     return {
-        id: item.CREATED_BY + item.NAME,
+        id: item.ID,
         phone_number: item.PHONE ?? null,
         saler_name: item.DISPLAY_NAME ?? null,
         detailUrl: item.DETAIL_PAGE_URL ?? "#",

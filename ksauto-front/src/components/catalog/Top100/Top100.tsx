@@ -16,6 +16,7 @@ export function Top100Section({ items }: Props) {
     const uniqueCars = Array.from(
         new Map(items.map(item => [`${item.id}-${item.created_by}`, item])).values()
     );
+
     return (
         <section className="section_main catalog catalog-new catalog-premium new-container">
             <div className="sale-title-block premium">

@@ -16,8 +16,8 @@ function getOrigin(h: Headers) {
 export default async function HeaderServer() {
   const h = await headers();
   const origin = getOrigin(h);
-
-  const url = new URL(`/next_main/api/header-menu`, origin);
+  // /next_main
+  const url = new URL(`/api/header-menu`, origin);
 
   const res = await fetch(url, { cache: "no-store" });
 

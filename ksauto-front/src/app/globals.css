@@ -194,11 +194,11 @@ select:not([multiple]) {
     height: 570px;
 }
 
-svg path:not(#curve_chart *) {
-    fill: inherit;
-    stroke: #353433;
-    stroke-width: inherit;
-}
+/*svg path:not(#curve_chart *) {*/
+/*    fill: inherit;*/
+/*    stroke: #353433;*/
+/*    stroke-width: inherit;*/
+/*}*/
 
 .icon-hover {
     transition: all .5s ease;
