@@ -31,6 +31,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
             }
 
             try {
+                //next_main
                 const res = await fetch("/api/favorites", {
                     headers: {
                         "Authorization": `Bearer ${token}`,
@@ -39,7 +40,6 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
                 if (!res.ok) throw new Error("Failed to fetch favorites");
 
                 const data = await res.json();
-                console.log(data);
                 setFavorites(data.items || []);
             } catch (e) {
                 console.error("Failed to load favorites", e);
@@ -67,6 +67,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         );
 
         try {
+            //next_main
             const res = await fetch("/api/favorites", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

@@ -17,7 +17,6 @@ export async function getFavoriteList(token_: string): Promise<string[]> {
         },
     });
 
-    console.log("getFavoriteList response:", response);
 
     return response.result.items; // уже строки, ничего мапить не нужно
 }
