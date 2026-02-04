@@ -225,10 +225,9 @@ export default function MainInfo({ initialData }: MainInfoProps) {
                             <form
                                 data-action="get-middle-costs"
                                 onSubmit={(e) => {
-                                    console.log("salam aleikym!!");
                                     e.preventDefault();
                                     setCarInfo(null);
-
+                                    //next_main
                                     fetch(`/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
                                         .then((res) => res.json())
                                         .then((data) => {
@@ -259,8 +258,6 @@ export default function MainInfo({ initialData }: MainInfoProps) {
                                         });
 
 
-                                    // console.log(carInfo);
-                                    // console.log(errorMessage);
                                 }}
                             >
                                 <label>

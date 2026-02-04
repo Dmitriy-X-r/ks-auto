@@ -19,7 +19,6 @@ export function FavoriteButton({ itemId }: { itemId: string | number }) {
     const handleClick = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Проверочка',isFav);
         if (loading) return;
 
         setLoading(true);

@@ -5,7 +5,7 @@ type NotificationCardProps = {
     title?: string;
     text?: string;
     date?: string;
-    read?: boolean;
+    read: boolean;
     onDelete?: (id:number | string) => void;
 }
 export function NotificationCard({id,title,text,date,read,onDelete}: NotificationCardProps) {

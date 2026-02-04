@@ -13,4 +13,8 @@ export const API_ENDPOINTS={
     search_city: `${process.env.NEXT_PUBLIC_API_DOMAIN}/search.city`,
     get_favorites: `${process.env.NEXT_PUBLIC_API_DOMAIN}/favorite`,
     get_notifications: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.notifications`,
+    delete_notifications: `${process.env.NEXT_PUBLIC_API_DOMAIN}/delete.notifications`,
+    update_notification: `${process.env.NEXT_PUBLIC_API_DOMAIN}/update.notifications`,
+    get_menu_info: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.header_user_menu`,
+
 }
