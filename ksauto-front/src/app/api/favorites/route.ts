@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getFavoriteList, addToFavorite, removeFromFavorite } from "@/lib/api/favorite";
 import { getAuthToken } from "@/lib/auth/getAuthToken";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
-        const token = getAuthToken();
-        if (!token) return NextResponse.json({ items: [] });
+        // Получаем токен из заголовка Authorization
+        const authHeader = req.headers.get("authorization");
+        if (!authHeader?.startsWith("Bearer ")) {
+            return NextResponse.json({ items: [] });
+        }
+        const token = authHeader.replace("Bearer ", "");
 
-        const favorites = await getFavoriteList();
+        const favorites = await getFavoriteList(token);
         return NextResponse.json({ items: favorites });
     } catch (e) {
         console.error("Route /api/favorites GET error:", e);
@@ -17,20 +21,26 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
-        const body = await req.json();
-        const { action, productId } = body;
-
-        if (!action || !productId) return NextResponse.json({ error: "Missing action or productId" }, { status: 400 });
+        const { action, productId } = await req.json();
 
         const token = getAuthToken();
-        if (!token) return NextResponse.json({ error: "No auth token" }, { status: 401 });
+        if (!token) {
+            return NextResponse.json({ success: false });
+        }
 
-        if (action === "add") await addToFavorite(productId);
-        else if (action === "delete") await removeFromFavorite(productId);
+        if (action === "add") {
+            await addToFavorite(productId, token);
+        }
+
+        if (action === "delete") {
+            await removeFromFavorite(productId, token);
+        }
 
         return NextResponse.json({ success: true });
     } catch (e) {
-        console.error("Route /api/favorites POST error:", e);
-        return NextResponse.json({ error: "Failed to update favorite" }, { status: 500 });
+        return NextResponse.json(
+            { error: "Failed to update favorite" },
+            { status: 500 }
+        );
     }
 }

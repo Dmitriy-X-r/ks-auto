@@ -24,7 +24,6 @@ export async function apiFetch<T>(
 
         finalUrl += `?${searchParams.toString()}`;
     }
-
     const res = await fetch(finalUrl, {
         ...options,
         headers: {

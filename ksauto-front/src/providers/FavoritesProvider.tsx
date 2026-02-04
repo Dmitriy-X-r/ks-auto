@@ -1,8 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import {getAuthToken} from "@/lib/auth/getAuthToken";
-import {addToFavorite, removeFromFavorite} from "@/lib/api/favorite";
+import {getFavoriteList} from "@/lib/api/favorite";
 
 type FavoritesContextType = {
     favorites: string[];
@@ -18,10 +23,23 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         (async () => {
+            const token = getAuthToken(); // клиентский token
+            if (!token) {
+                setFavorites([]);
+                setInitialized(true);
+                return;
+            }
+
             try {
-                const res = await fetch("/api/favorites");
-                if (!res.ok) return; // не авторизован или ошибка
+                const res = await fetch("/api/favorites", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+                if (!res.ok) throw new Error("Failed to fetch favorites");
+
                 const data = await res.json();
+                console.log(data);
                 setFavorites(data.items || []);
             } catch (e) {
                 console.error("Failed to load favorites", e);
@@ -33,29 +51,44 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
     const toggleFavorite = async (id: string) => {
         if (loading) return;
-        setLoading(true);
 
         const token = getAuthToken();
-        if (!token) return; // пользователь не авторизован, ничего не делаем
+        if (!token) {
+            console.warn("User not authorized");
+            return;
+        }
+
+        setLoading(true);
+
+        const isFav = favorites.includes(id);
+
+        setFavorites(prev =>
+            isFav ? prev.filter(f => f !== id) : [...prev, id]
+        );
 
         try {
-            const isFav = favorites.includes(id);
+            const res = await fetch("/api/favorites", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    action: isFav ? "delete" : "add",
+                    productId: id,
+                }),
+            });
 
-            if (isFav) {
-                await removeFromFavorite(id, token);
-                setFavorites(prev => prev.filter(f => f !== id));
-            } else {
-                await addToFavorite(id, token);
-                setFavorites(prev => [...prev, id]);
+            if (!res.ok) {
+                throw new Error("Request failed");
             }
         } catch (e) {
-            console.error("Failed to toggle favorite", e);
+            // rollback
+            setFavorites(prev =>
+                isFav ? [...prev, id] : prev.filter(f => f !== id)
+            );
         } finally {
             setLoading(false);
         }
     };
 
-    // если пользователь не авторизован, можно скрыть кнопки
     if (!initialized) return null;
 
     return (
@@ -67,6 +100,8 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
 export function useFavorites() {
     const ctx = useContext(FavoritesContext);
-    if (!ctx) throw new Error("useFavorites must be used inside FavoritesProvider");
+    if (!ctx) {
+        throw new Error("useFavorites must be used inside FavoritesProvider");
+    }
     return ctx;
 }

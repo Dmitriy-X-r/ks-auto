@@ -3,12 +3,11 @@ import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { getAuthToken } from "@/lib/auth/getAuthToken";
 
 // Получение списка избранного
-export async function getFavoriteList(): Promise<string[]> {
-    const token_ = getAuthToken();
+export async function getFavoriteList(token_: string): Promise<string[]> {
     if (!token_) return [];
 
     const response = await apiFetch<{
-        result: { count: number; items: { ID: string }[] };
+        result: { count: number; items: string[] };
     }>(API_ENDPOINTS.get_favorites, {
         params: {
             token_,
@@ -18,7 +17,9 @@ export async function getFavoriteList(): Promise<string[]> {
         },
     });
 
-    return response.result.items.map((item) => item.ID);
+    console.log("getFavoriteList response:", response);
+
+    return response.result.items; // уже строки, ничего мапить не нужно
 }
 
 // Добавление в избранное
