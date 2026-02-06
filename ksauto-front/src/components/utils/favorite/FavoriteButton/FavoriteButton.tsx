@@ -25,7 +25,7 @@ export function FavoriteButton({ itemId }: { itemId: string | number }) {
         try {
             await toggleFavorite(String(itemId));
 
-            setPopupMessage(isFav ? "Элемент удалён из избранного" : "Элемент добавлен в избранное");
+            setPopupMessage(isFav ? "Удалено из избранного" : "Добавлено в избранное");
         } finally {
             setLoading(false);
         }

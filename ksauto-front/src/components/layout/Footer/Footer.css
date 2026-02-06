@@ -1,3 +1,8 @@
 .footer-block__fourth .footer-contact-title {
     font-size: 22px;
 }
+
+.footer-block__fourth a {
+    display: flex;
+    gap: 5px;
+}

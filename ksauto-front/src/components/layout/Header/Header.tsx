@@ -6,6 +6,7 @@ import './Header.css';
 import { BASE_PATH } from "@/lib/basePath";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css"; // Подключаем базовые стили Swiper
+import CityCombobox from "@/components/utils/CityCombobox/CityCombobox";
 import {NotificationBell} from "@/components/utils/notification/NotificationBell/NotificationBell";
 import {FavoriteLink} from "@/components/utils/favorite/FavoriteLink/FavoriteLink";
 import {HeaderProfile} from "@/components/utils/profile_menu/HeaderProfile";
@@ -73,11 +74,11 @@ export default function Header({ catalogsData }: HeaderProps) {
         () => [
             { href: "/shares/", label: "Новости" },
             { href: "/trade-in/", label: "Trade-in" },
-            { href: "/autocredit/", label: "Дисконтные карты" },
+            { href: "/personal/bonus_card/", label: "Дисконтные карты" },
             { href: "/repair/", label: "Допоборудование и сервис" },
             { href: "/company/", label: "О компании" },
             { href: "/contacts/", label: "Контакты" },
-            { href: "/contacts/", label: "Акции портала" },
+            { href: "/rozygrysh/", label: "Акции портала" },
         ],
         []
     );
@@ -86,11 +87,11 @@ export default function Header({ catalogsData }: HeaderProps) {
         () => [
             { href: "/news/", label: "Новости", icon: "/local/img/news.png" },
             { href: "/trade-in/", label: "Trade-in", icon: "/local/img/arrow-rounded.png" },
-            { href: "/autocredit/", label: "Дисконтные карты", icon: "/local/templates/new/img/discount_icon.png" },
+            { href: "/personal/bonus_card/", label: "Дисконтные карты", icon: "/local/templates/new/img/discount_icon.png" },
             { href: "/repair/", label: "Допоборудование и сервис", icon: "/local/img/gear.png" },
             { href: "/company/", label: "О компании", icon: "/local/img/informationmark-circle.png" },
             { href: "/contacts/", label: "Контакты", icon: "/local/img/phone.png" },
-            { href: "/contacts/", label: "Акции портала", icon: "/local/templates/new/img/party-popper.png" },
+            { href: "/rozygrysh/", label: "Акции портала", icon: "/local/templates/new/img/party-popper.png" },
         ],
         []
     );
@@ -112,7 +113,7 @@ export default function Header({ catalogsData }: HeaderProps) {
 
         if (auth) {
             //next_main
-            fetch("/api/profile_user_menu", {
+            fetch("/next_main/api/profile_user_menu", {
                 headers: { Authorization: `Bearer ${token}` },
             })
                 .then(res => res.json())
@@ -186,7 +187,7 @@ export default function Header({ catalogsData }: HeaderProps) {
         setCitiesLoading(true);
         try {
             //next_main
-            const res = await fetch("/api/search-city");
+            const res = await fetch("/next_main/api/search-city");
             // /next_main
             const data = await res.json();
             setCities(Array.isArray(data.result) ? data.result : []);
@@ -688,16 +689,14 @@ export default function Header({ catalogsData }: HeaderProps) {
                         <div className="geo-popup-title">Введите ваш город</div>
 
                         <label className="get-costs-city ads-info__items">
-                            <select
-                                className="js-example-basic-multiple js-states form-control js__region_select3 geo-popup-select"
+                            <CityCombobox
+                                cities={cities}
                                 value={cityDraft}
-                                onChange={(e) => setCityDraft(e.target.value)}
-                            >
-                                <option value="">Введите город</option>
-                                {cities.map((c, idx) => (
-                                    <option key={`${c}-${idx}`} value={c}>{c}</option>
-                                ))}
-                            </select>
+                                onChange={setCityDraft}
+                                placeholder="Введите город"
+                                disabled={citiesLoading}
+                                className="js-example-basic-multiple js-states form-control js__region_select3"
+                            />
 
                             <input type="hidden" name="ADS_REGION" value="" />
                             <input type="hidden" name="ADS_CITY" value={cityDraft} />
@@ -801,18 +800,14 @@ export default function Header({ catalogsData }: HeaderProps) {
                         <div className="geo-popup-title">Введите ваш город</div>
 
                         <label className="get-costs-city ads-info__items">
-                            <select
-                                className="js-example-basic-multiple js-states form-control js__region_select3"
+                            <CityCombobox
+                                cities={cities}
                                 value={cityDraft}
-                                onChange={(e) => setCityDraft(e.target.value)}
-                            >
-                                <option value=""></option>
-                                {cities.map((c, idx) => (
-                                    <option key={`${c}-${idx}`} value={c}>
-                                        {c}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={setCityDraft}
+                                placeholder="Введите город"
+                                disabled={citiesLoading}
+                                className="js-example-basic-multiple js-states form-control js__region_select3"
+                            />
 
                             <input type="hidden" name="ADS_REGION" value="" />
                             <input type="hidden" name="ADS_CITY" value={cityDraft} />

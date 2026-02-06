@@ -5,11 +5,12 @@ type Props = {
 };
 
 export function HeaderProfileIcon({ avatar }: Props) {
+    const avatarUrl = process.env.NEXT_PUBLIC_MAIN_DOMAIN! + avatar.replace(/^\\/, '').replace(/\\/g, '');
     return (
         <div className="header-profile-icon">
-            <Image
-                src={avatar}
-                alt=""
+            <img
+                src={avatarUrl}
+                alt="avatar"
                 className="header__profile-avatar"
                 width={40}
                 height={40}

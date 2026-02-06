@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ProfileMenuApiResponse } from "@/lib/api/get_profile_menu";
 
@@ -7,13 +6,15 @@ type Props = {
 };
 
 export function HeaderProfileTitle({ data }: Props) {
+    const avatarUrl = process.env.NEXT_PUBLIC_MAIN_DOMAIN! + data?.avatar.replace(/^\\/, '').replace(/\\/g, '');
+    console.log(avatarUrl);
     if (!data) return null;
     return (
         <div className="header-profile-title">
             <div className="header-profile-title-icon">
-                <Image
-                    src={data.avatar}
-                    alt=""
+                <img
+                    src={avatarUrl}
+                    alt="avatar"
                     className="header__profile-avatar"
                     width={40}
                     height={40}

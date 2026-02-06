@@ -150,7 +150,7 @@ export default function Footer() {
                 >
                     <path
                         d="M1 1L9 9L1 17"
-                        stroke="white"
+                        stroke="#353433"
                         strokeWidth="1.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
