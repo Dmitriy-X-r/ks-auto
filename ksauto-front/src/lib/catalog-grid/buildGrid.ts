@@ -12,7 +12,7 @@ export function buildCatalogGrid(
         let candidate: CatalogCard | undefined;
 
         if (slot === 'P') {
-            // Сначала premium
+
             candidate = sources.premiumPool.find(
                 x => !existingIds.has(`${x.id}-${x.created_by}`)
             );

@@ -32,7 +32,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
             try {
                 //next_main
-                const res = await fetch("/next_main/api/favorites", {
+                const res = await fetch("/api/favorites", {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },
@@ -68,7 +68,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
         try {
             //next_main
-            const res = await fetch("/next_main/api/favorites", {
+            const res = await fetch("/api/favorites", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

@@ -113,7 +113,7 @@ export default function Header({ catalogsData }: HeaderProps) {
 
         if (auth) {
             //next_main
-            fetch("/next_main/api/profile_user_menu", {
+            fetch("/api/profile_user_menu", {
                 headers: { Authorization: `Bearer ${token}` },
             })
                 .then(res => res.json())
@@ -187,7 +187,7 @@ export default function Header({ catalogsData }: HeaderProps) {
         setCitiesLoading(true);
         try {
             //next_main
-            const res = await fetch("/next_main/api/search-city");
+            const res = await fetch("/api/search-city");
             // /next_main
             const data = await res.json();
             setCities(Array.isArray(data.result) ? data.result : []);

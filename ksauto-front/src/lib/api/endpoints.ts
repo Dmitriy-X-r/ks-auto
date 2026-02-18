@@ -16,5 +16,6 @@ export const API_ENDPOINTS={
     delete_notifications: `${process.env.NEXT_PUBLIC_API_DOMAIN}/delete.notifications`,
     update_notification: `${process.env.NEXT_PUBLIC_API_DOMAIN}/update.notifications`,
     get_menu_info: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.header_user_menu`,
-
+    /** SEO каталога: заголовки, description, canonical и т.д. (подключить при готовности API) */
+    catalog_seo: `${process.env.NEXT_PUBLIC_API_DOMAIN}/get.catalog_seo`,
 }

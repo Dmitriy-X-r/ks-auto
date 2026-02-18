@@ -228,7 +228,7 @@ export default function MainInfo({ initialData }: MainInfoProps) {
                                     e.preventDefault();
                                     setCarInfo(null);
                                     //next_main
-                                    fetch(`/next_main/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
+                                    fetch(`/api/info-before-report?searchPhrase=${encodeURIComponent(searchValue)}`)
                                         .then((res) => res.json())
                                         .then((data) => {
                                             const result = data.result;

@@ -20,7 +20,7 @@ export function NotificationBell() {
 
         if (!token) return;
         //next_main
-        await fetch("/next_main/api/notifications", {
+        await fetch("/api/notifications", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export function NotificationBell() {
 
         if (!token) return;
         //next_main
-        await fetch("/next_main/api/notifications", {
+        await fetch("/api/notifications", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export function NotificationBell() {
 
         if (!token || ids.length === 0) return;
         //next_main
-        await fetch("/next_main/api/notifications", {
+        await fetch("/api/notifications", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -66,7 +66,7 @@ export function NotificationBell() {
     useEffect(() => {
         if (!token) return;
         //next_main
-        fetch("/next_main/api/notifications", {
+        fetch("/api/notifications", {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
